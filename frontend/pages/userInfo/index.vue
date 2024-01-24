@@ -3,6 +3,7 @@
       <h1>{{ title }}</h1>
       <p>{{ paragraph }}</p>
       <button @click="buttonClicked">{{ buttonText }}</button>
+      <LinkBtn/>
     </div>
   </template>
   
