@@ -1,11 +1,11 @@
 import { Body, Delete, Controller, Get, NotFoundException, Param, ParseIntPipe, Post, Put, UseInterceptors, UploadedFile } from '@nestjs/common';
-import { UserService } from './users.service';
+import { UsersService } from './users.service';
 import { UserEntity } from './user.entity/user.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('users')
 export class UsersController {
- constructor(private readonly userService: UserService) {}
+ constructor(private readonly userService: UsersService) {}
 
  @Get()
  async findAll(): Promise<UserEntity[]> {

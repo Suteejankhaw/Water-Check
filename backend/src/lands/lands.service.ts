@@ -47,5 +47,5 @@ export class LandsService {
  async createMultipleLands(landsData: Partial<LandEntity>[]): Promise<LandEntity[]> {
   const lands = landsData.map((data) => this.landRepository.create(data));
   return this.landRepository.save(lands);
-}
+  }
 }
