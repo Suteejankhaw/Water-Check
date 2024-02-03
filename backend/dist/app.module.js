@@ -42,7 +42,7 @@ exports.AppModule = AppModule = __decorate([
                     host: 'localhost',
                     port: 3306,
                     username: 'root',
-                    password: '',
+                    password: configService.get('DATABASE_PASSWORD', ''),
                     database: configService.get('DATABASE_USEd', 'water_watch_db'),
                     entities: [user_entity_1.UserEntity, land_entity_1.LandEntity, bill_entity_1.BillEntity],
                     synchronize: true,

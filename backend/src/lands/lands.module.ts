@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { LandEntity } from './land.entity/land.entity';
-import { LandService } from './lands.service'; 
-import { LandController } from './lands.controller'; 
+import { LandsService } from './lands.service'; 
+import { LandsController } from './lands.controller'; 
 
 @Module({
   imports: [TypeOrmModule.forFeature([LandEntity])],
   exports: [TypeOrmModule],
-  controllers: [LandController],
-  providers: [LandService],
+  controllers: [LandsController],
+  providers: [LandsService],
 })
 export class LandsModule {}

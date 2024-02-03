@@ -25,7 +25,7 @@ import { SeederModule } from './seeder/seeder.module';
         host: 'localhost',
         port: 3306,
         username: 'root',
-        password: '',
+        password: configService.get('DATABASE_PASSWORD', ''),
         database: configService.get('DATABASE_USEd', 'water_watch_db'),
         entities: [UserEntity, LandEntity, BillEntity],
         synchronize: true,

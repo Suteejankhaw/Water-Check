@@ -12,20 +12,22 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LandService = void 0;
+exports.LandsService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const land_entity_1 = require("./land.entity/land.entity");
-let LandService = class LandService {
+let LandsService = class LandsService {
     constructor(landRepository) {
         this.landRepository = landRepository;
     }
     async findAll() {
-        return this.landRepository.find();
+        return this.landRepository.find({});
     }
     async findById(id) {
-        return this.landRepository.findOne({ where: { id: id } });
+        return this.landRepository.findOne({
+            where: { id: id },
+        });
     }
     async create(land) {
         return this.landRepository.save(land);
@@ -35,17 +37,25 @@ let LandService = class LandService {
         return this.landRepository.findOne({ where: { id: id } });
     }
     async delete(id) {
+        const billsCount = await this.landRepository.count({
+            where: { id },
+        });
+        if (billsCount > 0) {
+            console.error(`Pls delete all Bill in land ID ${id}.`);
+            return;
+        }
         await this.landRepository.delete(id);
+        console.log(`success delete Land ID ${id}.`);
     }
     async createMultipleLands(landsData) {
         const lands = landsData.map((data) => this.landRepository.create(data));
         return this.landRepository.save(lands);
     }
 };
-exports.LandService = LandService;
-exports.LandService = LandService = __decorate([
+exports.LandsService = LandsService;
+exports.LandsService = LandsService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(land_entity_1.LandEntity)),
     __metadata("design:paramtypes", [typeorm_2.Repository])
-], LandService);
+], LandsService);
 //# sourceMappingURL=lands.service.js.map

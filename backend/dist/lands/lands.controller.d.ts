@@ -1,8 +1,8 @@
 import { LandEntity } from './land.entity/land.entity';
-import { LandService } from './lands.service';
-export declare class LandController {
+import { LandsService } from './lands.service';
+export declare class LandsController {
     private readonly landService;
-    constructor(landService: LandService);
+    constructor(landService: LandsService);
     findAll(): Promise<LandEntity[]>;
     findById(id: number): Promise<LandEntity>;
     create(land: LandEntity): Promise<LandEntity>;

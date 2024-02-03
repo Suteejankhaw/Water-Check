@@ -1,10 +1,10 @@
 import { Controller, Get, Post, Put, Delete, Param, NotFoundException, Body } from '@nestjs/common';
 import { LandEntity } from './land.entity/land.entity';
-import { LandService } from './lands.service';
+import { LandsService } from './lands.service';
 
 @Controller('lands')
-export class LandController {
-  constructor(private readonly landService: LandService) {}
+export class LandsController {
+  constructor(private readonly landService: LandsService) {}
 
   @Get()
  async findAll(): Promise<LandEntity[]> {

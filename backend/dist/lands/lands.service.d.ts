@@ -1,6 +1,6 @@
 import { Repository } from 'typeorm';
 import { LandEntity } from './land.entity/land.entity';
-export declare class LandService {
+export declare class LandsService {
     private readonly landRepository;
     constructor(landRepository: Repository<LandEntity>);
     findAll(): Promise<LandEntity[]>;

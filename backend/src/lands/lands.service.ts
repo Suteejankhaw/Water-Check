@@ -5,18 +5,21 @@ import { LandEntity } from './land.entity/land.entity';
 
 
 @Injectable()
-export class LandService {
+export class LandsService {
   constructor(
     @InjectRepository(LandEntity)
     private readonly landRepository: Repository<LandEntity>,
   ) {}
 
   async findAll(): Promise<LandEntity[]> {
-    return this.landRepository.find();
+    return this.landRepository.find({
+    });
   }
 
   async findById(id: number): Promise<LandEntity> {
-    return this.landRepository.findOne({where: {id: id}});
+    return this.landRepository.findOne({
+      where: {id: id},
+    });
  }
 
  async create(land: LandEntity): Promise<LandEntity> {
@@ -29,9 +32,18 @@ export class LandService {
  }
 
  async delete(id: number): Promise<void> {
-    await this.landRepository.delete(id);
+  const billsCount = await this.landRepository.count({
+    where: { id },
+  });
+  if (billsCount > 0) {
+    console.error(`Pls delete all Bill in land ID ${id}.`);
+    return;
+  }
+  await this.landRepository.delete(id);
+  console.log(`success delete Land ID ${id}.`);
  }
 
+ 
  async createMultipleLands(landsData: Partial<LandEntity>[]): Promise<LandEntity[]> {
   const lands = landsData.map((data) => this.landRepository.create(data));
   return this.landRepository.save(lands);
