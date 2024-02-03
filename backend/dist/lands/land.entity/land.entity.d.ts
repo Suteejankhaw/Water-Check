@@ -3,6 +3,7 @@ import { UserEntity } from "src/users/user.entity/user.entity";
 export declare class LandEntity {
     id: number;
     meter_no: string;
+    Image_iD: string;
     bill: BillEntity[];
     user: UserEntity;
 }

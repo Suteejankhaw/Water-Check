@@ -21,20 +21,25 @@ let LandService = class LandService {
     constructor(landRepository) {
         this.landRepository = landRepository;
     }
-    async findOne(id) {
-        try {
-            const land = await this.landRepository.findOne({
-                where: { id },
-                relations: ['user'],
-            });
-            if (!land) {
-                throw new common_1.NotFoundException(`Land not found with ID ${id}`);
-            }
-            return land;
-        }
-        catch (error) {
-            throw new common_1.NotFoundException(`Land not found with ID ${id}`);
-        }
+    async findAll() {
+        return this.landRepository.find();
+    }
+    async findById(id) {
+        return this.landRepository.findOne({ where: { id: id } });
+    }
+    async create(land) {
+        return this.landRepository.save(land);
+    }
+    async update(id, land) {
+        await this.landRepository.update(id, land);
+        return this.landRepository.findOne({ where: { id: id } });
+    }
+    async delete(id) {
+        await this.landRepository.delete(id);
+    }
+    async createMultipleLands(landsData) {
+        const lands = landsData.map((data) => this.landRepository.create(data));
+        return this.landRepository.save(lands);
     }
 };
 exports.LandService = LandService;

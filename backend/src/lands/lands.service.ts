@@ -11,20 +11,29 @@ export class LandService {
     private readonly landRepository: Repository<LandEntity>,
   ) {}
 
-  async findOne(id: number): Promise<LandEntity> {
-    try {
-      const land = await this.landRepository.findOne({
-        where: { id },
-        relations: ['user'],
-      });
-
-      if (!land) {
-        throw new NotFoundException(`Land not found with ID ${id}`);
-      }
-
-      return land;
-    } catch (error) {
-      throw new NotFoundException(`Land not found with ID ${id}`);
-    }
+  async findAll(): Promise<LandEntity[]> {
+    return this.landRepository.find();
   }
+
+  async findById(id: number): Promise<LandEntity> {
+    return this.landRepository.findOne({where: {id: id}});
+ }
+
+ async create(land: LandEntity): Promise<LandEntity> {
+    return this.landRepository.save(land);
+ }
+
+ async update(id: number, land: LandEntity): Promise<LandEntity> {
+    await this.landRepository.update(id, land);
+    return this.landRepository.findOne({where: {id: id}});
+ }
+
+ async delete(id: number): Promise<void> {
+    await this.landRepository.delete(id);
+ }
+
+ async createMultipleLands(landsData: Partial<LandEntity>[]): Promise<LandEntity[]> {
+  const lands = landsData.map((data) => this.landRepository.create(data));
+  return this.landRepository.save(lands);
+}
 }

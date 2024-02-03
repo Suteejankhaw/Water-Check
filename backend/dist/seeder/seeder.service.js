@@ -50,6 +50,7 @@ let SeederService = class SeederService {
         const savedUsers = await this.usersRepository.save(allUsers);
         const landsAndBills = Array.from({ length: 20 }, (_, i) => ({
             meter_no: `Meter${i}`,
+            Image_iD: `${i}`,
             userId: i + 1,
             bills: [{
                     cost_value: `${Math.floor(Math.random() * 100)}`,
@@ -61,6 +62,7 @@ let SeederService = class SeederService {
         for (let i = 0; i < landsAndBills.length; i++) {
             const land = new land_entity_1.LandEntity();
             land.meter_no = landsAndBills[i].meter_no;
+            land.Image_iD = landsAndBills[i].Image_iD;
             land.user = savedUsers[i % savedUsers.length];
             const bill = new bill_entity_1.BillEntity();
             bill.cost_value = landsAndBills[i].bills[0].cost_value;

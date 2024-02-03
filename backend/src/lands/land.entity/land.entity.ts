@@ -10,6 +10,9 @@ export class LandEntity {
     @Column({nullable : false})
     meter_no: string;
 
+    @Column()
+    Image_iD: string;
+
     @OneToMany(() => BillEntity, (bill) => bill.land)
     bill: BillEntity[]
 

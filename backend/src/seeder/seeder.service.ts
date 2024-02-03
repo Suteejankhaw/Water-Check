@@ -52,6 +52,7 @@ export class SeederService {
   // Define seed data for lands and bills
   const landsAndBills = Array.from({ length: 20 }, (_, i) => ({
      meter_no: `Meter${i}`,
+     Image_iD: `${i}`,
      userId: i + 1, // Assuming users are created first and IDs increment sequentially
      bills: [{
        cost_value: `${Math.floor(Math.random() * 100)}`,
@@ -65,6 +66,7 @@ export class SeederService {
   for (let i = 0; i < landsAndBills.length; i++) {
      const land = new LandEntity();
      land.meter_no = landsAndBills[i].meter_no;
+     land.Image_iD = landsAndBills[i].Image_iD;
      land.user = savedUsers[i % savedUsers.length]; // Cycle through users
  
      const bill = new BillEntity();
