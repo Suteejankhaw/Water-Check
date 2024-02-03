@@ -15,34 +15,69 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersController = void 0;
 const common_1 = require("@nestjs/common");
 const users_service_1 = require("./users.service");
+const user_entity_1 = require("./user.entity/user.entity");
 let UsersController = class UsersController {
     constructor(userService) {
         this.userService = userService;
     }
-    async getUser(id) {
-        return this.userService.findOne(id);
+    async findAll() {
+        return this.userService.findAll();
     }
-    async getLandsByUserId(userId) {
-        return this.userService.findLandsByUserId(userId);
+    async findById(id) {
+        const user = await this.userService.findById(id);
+        if (!user) {
+            throw new common_1.NotFoundException(`User with ID ${id} not found.`);
+        }
+        return user;
+    }
+    async create(user) {
+        return this.userService.create(user);
+    }
+    async update(id, user) {
+        return this.userService.update(id, user);
+    }
+    async delete(id) {
+        await this.userService.delete(id);
     }
 };
 exports.UsersController = UsersController;
 __decorate([
-    (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    (0, common_1.Get)(),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
+    __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
-], UsersController.prototype, "getUser", null);
+], UsersController.prototype, "findAll", null);
 __decorate([
-    (0, common_1.Get)('lands/:userId'),
-    __param(0, (0, common_1.Param)('userId', common_1.ParseIntPipe)),
+    (0, common_1.Get)(':id'),
+    __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
-], UsersController.prototype, "getLandsByUserId", null);
+], UsersController.prototype, "findById", null);
+__decorate([
+    (0, common_1.Post)(),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [user_entity_1.UserEntity]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "create", null);
+__decorate([
+    (0, common_1.Put)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, user_entity_1.UserEntity]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "update", null);
+__decorate([
+    (0, common_1.Delete)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "delete", null);
 exports.UsersController = UsersController = __decorate([
     (0, common_1.Controller)('users'),
-    __metadata("design:paramtypes", [users_service_1.UsersService])
+    __metadata("design:paramtypes", [users_service_1.UserService])
 ], UsersController);
 //# sourceMappingURL=users.controller.js.map

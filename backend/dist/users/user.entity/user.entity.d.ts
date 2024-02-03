@@ -8,7 +8,7 @@ export declare class UserEntity {
     role: string;
     lands: LandEntity[];
 }
-export declare class collectorEntity extends UserEntity {
+export declare class CollectorEntity extends UserEntity {
     bill: BillEntity[];
 }
 export declare class AdminEntity extends UserEntity {

@@ -1,9 +1,12 @@
 import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity/user.entity';
-import { LandEntity } from 'src/lands/land.entity/land.entity';
-export declare class UsersService {
+export declare class UserService {
     private readonly userRepository;
     constructor(userRepository: Repository<UserEntity>);
-    findOne(id: number): Promise<UserEntity>;
-    findLandsByUserId(id: number): Promise<LandEntity[]>;
+    findAll(): Promise<UserEntity[]>;
+    findById(id: number): Promise<UserEntity>;
+    create(user: UserEntity): Promise<UserEntity>;
+    update(id: number, user: UserEntity): Promise<UserEntity>;
+    delete(id: number): Promise<void>;
+    createMultipleUsers(usersData: Partial<UserEntity>[]): Promise<UserEntity[]>;
 }

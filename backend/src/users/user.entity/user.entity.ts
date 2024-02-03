@@ -27,7 +27,7 @@ export class UserEntity {
   }
   
   @Entity()
-  export class collectorEntity extends UserEntity {
+  export class CollectorEntity extends UserEntity {
       @OneToMany(() => BillEntity, (bill) => bill.collector)
       bill: BillEntity[]
   }

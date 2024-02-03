@@ -12,47 +12,40 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UsersService = void 0;
+exports.UserService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const user_entity_1 = require("./user.entity/user.entity");
-let UsersService = class UsersService {
+let UserService = class UserService {
     constructor(userRepository) {
         this.userRepository = userRepository;
     }
-    async findOne(id) {
-        try {
-            const user = await this.userRepository.findOne({ where: { id } });
-            if (!user) {
-                throw new common_1.NotFoundException(`User not found with ID ${id}`);
-            }
-            return user;
-        }
-        catch (error) {
-            throw new common_1.NotFoundException(`User not found with ID ${id}`);
-        }
+    async findAll() {
+        return this.userRepository.find();
     }
-    async findLandsByUserId(id) {
-        try {
-            const user = await this.userRepository.findOne({
-                where: { id },
-                relations: ['lands']
-            });
-            if (!user.lands) {
-                throw new common_1.NotFoundException(`lands not found with userID ${id}`);
-            }
-            return user.lands;
-        }
-        catch (error) {
-            throw new common_1.NotFoundException(`lands not found with userID ${id}`);
-        }
+    async findById(id) {
+        return this.userRepository.findOne({ where: { id: id } });
+    }
+    async create(user) {
+        return this.userRepository.save(user);
+    }
+    async update(id, user) {
+        await this.userRepository.update(id, user);
+        return this.userRepository.findOne({ where: { id: id } });
+    }
+    async delete(id) {
+        await this.userRepository.delete(id);
+    }
+    async createMultipleUsers(usersData) {
+        const users = usersData.map((data) => this.userRepository.create(data));
+        return this.userRepository.save(users);
     }
 };
-exports.UsersService = UsersService;
-exports.UsersService = UsersService = __decorate([
+exports.UserService = UserService;
+exports.UserService = UserService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(user_entity_1.UserEntity)),
     __metadata("design:paramtypes", [typeorm_2.Repository])
-], UsersService);
+], UserService);
 //# sourceMappingURL=users.service.js.map

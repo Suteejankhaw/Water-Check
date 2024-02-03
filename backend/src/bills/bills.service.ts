@@ -32,7 +32,7 @@ export class BillsService {
   }
 }
 
-interface Bill {
+export interface Bill {
   id: string;
   amount: number;
   description: string;

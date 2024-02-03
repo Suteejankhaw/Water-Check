@@ -18,6 +18,7 @@ exports.LandsModule = LandsModule;
 exports.LandsModule = LandsModule = __decorate([
     (0, common_1.Module)({
         imports: [typeorm_1.TypeOrmModule.forFeature([land_entity_1.LandEntity])],
+        exports: [typeorm_1.TypeOrmModule],
         controllers: [lands_controller_1.LandController],
         providers: [lands_service_1.LandService],
     })

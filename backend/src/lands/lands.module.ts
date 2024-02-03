@@ -5,7 +5,8 @@ import { LandService } from './lands.service';
 import { LandController } from './lands.controller'; 
 
 @Module({
-  imports: [TypeOrmModule.forFeature([LandEntity])], 
+  imports: [TypeOrmModule.forFeature([LandEntity])],
+  exports: [TypeOrmModule],
   controllers: [LandController],
   providers: [LandService],
 })

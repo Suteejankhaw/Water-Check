@@ -1,5 +1,5 @@
 import { LandEntity } from "src/lands/land.entity/land.entity";
-import { AdminEntity, UserEntity, collectorEntity } from "src/users/user.entity/user.entity";
+import { AdminEntity, UserEntity, CollectorEntity } from "src/users/user.entity/user.entity";
 import { Column, Entity, PrimaryGeneratedColumn,ManyToOne } from "typeorm";
 
 @Entity({ name: 'bills' })

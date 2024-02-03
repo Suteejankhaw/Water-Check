@@ -2,43 +2,37 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity/user.entity';
-import { LandEntity } from 'src/lands/land.entity/land.entity';
 
 @Injectable()
-export class UsersService {
-  constructor(
+export class UserService {
+ constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-  ) {}
+ ) {}
 
-  async findOne(id: number): Promise<UserEntity> {
-    try {
-      const user = await this.userRepository.findOne({ where: { id } });
+ async findAll(): Promise<UserEntity[]> {
+    return this.userRepository.find();
+ }
 
-      if (!user) {
-        throw new NotFoundException(`User not found with ID ${id}`);
-      }
+ async findById(id: number): Promise<UserEntity> {
+    return this.userRepository.findOne({where: {id: id}});
+ }
 
-      return user;
-    } catch (error) {
-      throw new NotFoundException(`User not found with ID ${id}`);
-    }
-  }
+ async create(user: UserEntity): Promise<UserEntity> {
+    return this.userRepository.save(user);
+ }
 
-  async findLandsByUserId(id: number): Promise<LandEntity[]> {
-    try {
-      const user = await this.userRepository.findOne({
-        where: { id }, 
-        relations: ['lands'] 
-      });
+ async update(id: number, user: UserEntity): Promise<UserEntity> {
+    await this.userRepository.update(id, user);
+    return this.userRepository.findOne({where: {id: id}});
+ }
 
-      if (!user.lands) {
-        throw new NotFoundException(`lands not found with userID ${id}`);
-      }
+ async delete(id: number): Promise<void> {
+    await this.userRepository.delete(id);
+ }
 
-      return user.lands;
-    } catch (error) {
-      throw new NotFoundException(`lands not found with userID ${id}`);
-    }
-  }
+ async createMultipleUsers(usersData: Partial<UserEntity>[]): Promise<UserEntity[]> {
+  const users = usersData.map((data) => this.userRepository.create(data));
+  return this.userRepository.save(users);
+}
 }

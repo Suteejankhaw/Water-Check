@@ -6,9 +6,8 @@ export declare class BillsService {
     updateBill(billId: string, updatedData: Partial<Bill>): Bill | undefined;
     deleteBill(billId: string): void;
 }
-interface Bill {
+export interface Bill {
     id: string;
     amount: number;
     description: string;
 }
-export {};

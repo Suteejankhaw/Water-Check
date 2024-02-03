@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AdminEntity = exports.collectorEntity = exports.UserEntity = void 0;
+exports.AdminEntity = exports.CollectorEntity = exports.UserEntity = void 0;
 const bill_entity_1 = require("../../bills/bill.entity/bill.entity");
 const land_entity_1 = require("../../lands/land.entity/land.entity");
 const typeorm_1 = require("typeorm");
@@ -43,16 +43,16 @@ __decorate([
 exports.UserEntity = UserEntity = __decorate([
     (0, typeorm_1.Entity)({ name: 'users' })
 ], UserEntity);
-let collectorEntity = class collectorEntity extends UserEntity {
+let CollectorEntity = class CollectorEntity extends UserEntity {
 };
-exports.collectorEntity = collectorEntity;
+exports.CollectorEntity = CollectorEntity;
 __decorate([
     (0, typeorm_1.OneToMany)(() => bill_entity_1.BillEntity, (bill) => bill.collector),
     __metadata("design:type", Array)
-], collectorEntity.prototype, "bill", void 0);
-exports.collectorEntity = collectorEntity = __decorate([
+], CollectorEntity.prototype, "bill", void 0);
+exports.CollectorEntity = CollectorEntity = __decorate([
     (0, typeorm_1.Entity)()
-], collectorEntity);
+], CollectorEntity);
 let AdminEntity = class AdminEntity extends UserEntity {
 };
 exports.AdminEntity = AdminEntity;
