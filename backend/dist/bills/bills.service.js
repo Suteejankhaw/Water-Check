@@ -22,11 +22,14 @@ let BillsService = class BillsService {
         this.billRepository = billRepository;
     }
     async findAll() {
-        return this.billRepository.find({});
+        return this.billRepository.find({
+            relations: ['land', 'collector'],
+        });
     }
     async findById(id) {
         return this.billRepository.findOne({
             where: { id: id },
+            relations: ['land', 'collector'],
         });
     }
     async create(bill) {

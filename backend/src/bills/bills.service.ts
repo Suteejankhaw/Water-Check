@@ -12,12 +12,14 @@ export class BillsService {
 
   async findAll(): Promise<BillEntity[]> {
     return this.billRepository.find({
+      relations: ['land', 'collector'],
     });
   }
 
   async findById(id: number): Promise<BillEntity> {
     return this.billRepository.findOne({
       where: {id: id},
+      relations: ['land', 'collector'],
     });
  }
 

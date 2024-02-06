@@ -2,7 +2,7 @@
   <div>
     <h1>LOGIN</h1>
     <p v-if="loginStatus === 'invalid'">Invalid username or password</p>
-    <input type="text" v-model="id" placeholder="id"> <br>
+    <input type="text" v-model="userId" placeholder="id"> <br>
     <input type="text" v-model="password" placeholder="password"> <br>
     <button @click="login">Login</button>
   </div>
@@ -14,7 +14,7 @@
 
   const runtimeConfig = useRuntimeConfig()
   let BASE_URL = runtimeConfig.public.BASE_URL
-  let id = ''
+  let userId = ''
   let password = ''
   let loginStatus = ref('')
 
@@ -30,7 +30,7 @@
   }
 
   async function login() {
-    let ENDPOINT = `/users/${id}`
+    let ENDPOINT = `/users/${userId}`
     const users = await $fetch(BASE_URL + ENDPOINT, {
       method: 'GET',
     })
