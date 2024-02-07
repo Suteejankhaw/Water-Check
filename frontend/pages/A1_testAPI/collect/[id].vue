@@ -40,20 +40,20 @@
       method: 'GET',
     })
     const sortedBills = bills.sort((a, b) => {
-        const dateA = new Date(a.dateTime || '9999-12-31');
-        const dateB = new Date(b.dateTime || '9999-12-31');
-        return dateB - dateA;
+      const dateA = new Date(a.dateTime || '9999-12-31');
+      const dateB = new Date(b.dateTime || '9999-12-31');
+      return dateB - dateA;
     });
     setTimeout(() => {
-        let count = 0;
-        const latestBillContainer = document.querySelector('.latestBill');
-        sortedBills.forEach(bill => {
-            if (count < 3 && bill.collector.id === users.id) {
-                const latestBill = document.createElement('p');
-                latestBill.textContent = `BillID: ${bill.id}  LandID: ${bill.land.id}`;
-                count++;
-                latestBillContainer.appendChild(latestBill);
-            }
-        });
+      let count = 0;
+      const latestBillContainer = document.querySelector('.latestBill');
+      sortedBills.forEach(bill => {
+        if (count < 3 && bill.collector.id === users.id) {
+            const latestBill = document.createElement('p');
+            latestBill.textContent = `BillID: ${bill.id}  LandID: ${bill.land.id}`;
+            count++;
+            latestBillContainer.appendChild(latestBill);
+        }
+      });
     });
 </script>
