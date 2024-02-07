@@ -44,10 +44,9 @@
         const dateB = new Date(b.dateTime || '9999-12-31');
         return dateB - dateA;
     });
-    import { nextTick } from 'vue';
-    const latestBillContainer = document.querySelector('.latestBill');
-    nextTick(() => {
+    setTimeout(() => {
         let count = 0;
+        const latestBillContainer = document.querySelector('.latestBill');
         sortedBills.forEach(bill => {
             if (count < 3 && bill.collector.id === users.id) {
                 const latestBill = document.createElement('p');
