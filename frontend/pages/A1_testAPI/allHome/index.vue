@@ -26,7 +26,12 @@
 
         const saveBill = document.createElement('button')
         saveBill.textContent = `saveBill`
+        saveBill.addEventListener('click', SaveBillButton(land.id));
         allHomeContainer.appendChild(saveBill)
       });
+
+      function  SaveBillButton() {
+        
+      }
     });
 </script>
