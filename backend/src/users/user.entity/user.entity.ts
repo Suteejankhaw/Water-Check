@@ -18,6 +18,9 @@ export class UserEntity {
     @Column()
     phone_no: string;
 
+    @Column()
+    Image_iD: string;
+
     @Column({ nullable: true })
     role: string;
     

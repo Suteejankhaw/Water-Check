@@ -26,6 +26,7 @@ export class SeederService {
      username: `User${i}`,
      password: `Password${i}`,
      phone_no: `${1234567890 + i}`,
+     Image_iD: `${i}`,
      role: 'User',
   }));
  
@@ -33,6 +34,7 @@ export class SeederService {
      username: `Collector${i}`,
      password: `Password${i}`,
      phone_no: `${1234567890 + i + 10}`, // Start after the regular users
+     Image_iD: `${i}`,
      role: 'Collector',
   }));
  
@@ -40,6 +42,7 @@ export class SeederService {
      username: `Admin${i}`,
      password: `Password${i}`,
      phone_no: `${1234567890 + i + 16}`, // Start after the collectors
+     Image_iD: `${i}`,
      role: 'Admin',
   }));
  

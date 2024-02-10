@@ -33,6 +33,10 @@ __decorate([
     __metadata("design:type", String)
 ], UserEntity.prototype, "phone_no", void 0);
 __decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], UserEntity.prototype, "Image_iD", void 0);
+__decorate([
     (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
 ], UserEntity.prototype, "role", void 0);

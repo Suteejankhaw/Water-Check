@@ -32,18 +32,21 @@ let SeederService = class SeederService {
             username: `User${i}`,
             password: `Password${i}`,
             phone_no: `${1234567890 + i}`,
+            Image_iD: `${i}`,
             role: 'User',
         }));
         const collectors = Array.from({ length: 6 }, (_, i) => ({
             username: `Collector${i}`,
             password: `Password${i}`,
             phone_no: `${1234567890 + i + 10}`,
+            Image_iD: `${i}`,
             role: 'Collector',
         }));
         const admins = Array.from({ length: 2 }, (_, i) => ({
             username: `Admin${i}`,
             password: `Password${i}`,
             phone_no: `${1234567890 + i + 16}`,
+            Image_iD: `${i}`,
             role: 'Admin',
         }));
         const allUsers = [...users, ...collectors, ...admins];

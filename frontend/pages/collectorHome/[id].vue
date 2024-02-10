@@ -1,41 +1,81 @@
-<script setup>
-definePageMeta({
-  layout: "landing",
-});
-</script>
 <template>
     <div class="page-container">
     <div class="collector">
-      <img src="assets/images/Waltherwhite.jpg" alt="Image" class="circle-image">
+      <img alt="Image" class="circle-image">
       <div class="user-info">
-        <p>ID:api</p> 
-        <p>Name:api</p>
-        <p>Phonenumber:api</p> 
-        <p>Role:api</p> 
-        <p>Land:api</p>
+        <p>ID:{{ userId }}</p> 
+        <p>Name:{{ username }}</p>
+        <p>Phonenumber:{{ phonenumber }}</p> 
+        <p>Role:{{ role }}</p> 
       </div>
-      <router-link to="/Houselist" class="house-button">รายการบ้าน</router-link>
-      <router-link to="/other-page" class="save-button">ดูบิลทั้งหมด</router-link>
+      <p class="house-button" @click="goToAllHome()">รายการบ้าน</p>
+      <p class="save-button" @click="goToAllBill()">ดูบิลทั้งหมด</p>
        <h1 class="latest-bill-heading">บันทึกบิลล่าสุด</h1>
     <ul class="bill-list">
-      <li class="bill-item"><a href="/link-to-other-page"></a>บิลที่ 1</li>
-      <li class="bill-item"><a href="/link-to-other-page"></a>บิลที่ 2</li>
-      <li class="bill-item"><a href="/link-to-other-page"></a>บิลที่ 3</li>
-      <li class="bill-item"><a href="/link-to-other-page"></a>บิลที่ 4</li>
+      <li class="bill-item" id="bill-item-1"><a href="/link-to-other-page"></a></li>
+      <li class="bill-item" id="bill-item-2"><a href="/link-to-other-page"></a></li>
+      <li class="bill-item" id="bill-item-3"><a href="/link-to-other-page"></a></li>
     </ul>
     </div>
     </div>
   </template>
   
-  <script>
-  export default {
-    name: 'Collector'
-  };
-  </script>
+<script setup lang="ts">
+  import { ref, computed } from 'vue'
+  import { useRoute, useRouter } from 'vue-router'
+
+  
+  const runtimeConfig = useRuntimeConfig()
+  let BASE_URL = runtimeConfig.public.BASE_URL
+
+
+  const route = useRoute()
+  const users = await $fetch(BASE_URL + `/users/${route.params.id}`, {
+    method: 'GET',
+  })
+  setTimeout(() => {
+    document.querySelector('.circle-image').src = `C:/Users/PC/Documents/GitHub/Water-Check/frontend/assets/images/users/${users.Image_iD}.jpg`
+  });
+  let username = ref(users.username)
+  let userId = ref(users.id)
+  let phonenumber = ref(users.phone_no)
+  let role = ref(users.role)
+
+
+  const router = useRouter()
+  const goToAllHome = () => {
+    router.push(`/A1_testAPI/allHome`)
+  }
+  const goToAllBill = () => {
+    router.push(`/A1_testAPI/allBill`)
+  }
+
+  const bills = await $fetch(BASE_URL + `/bills`, {
+      method: 'GET',
+    })
+    //เรียงล่าสุดไปเก่าสุด (Null = 1000-12-31)
+    const sortedBills = bills.sort((a, b) => {
+      const dateA = new Date(a.dateTime || '1000-12-31');
+      const dateB = new Date(b.dateTime || '1000-12-31');
+      return dateB - dateA;
+    });
+    setTimeout(() => {
+      let count = 1;
+      sortedBills.forEach(bill => {
+        if (count < 4 && bill.collector.id === users.id) {
+            const latestBill = document.querySelector(`#bill-item-${count}`);
+            latestBill.textContent = `บิลที่: ${bill.id}   บ้านเลนที่: ${bill.land.id}`;
+            latestBill.style.display = "flex";
+
+            count++;
+        }
+      });
+    });
+</script>
   
   <style scoped>
 .collector {
-    display: flex;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -125,7 +165,7 @@ definePageMeta({
   border-radius: 5px;
   margin-bottom: 10px;
   cursor: pointer;
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
 }
