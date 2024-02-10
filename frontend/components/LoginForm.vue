@@ -50,7 +50,7 @@
       router.push(`/userInfo/${userId}`)
   }
   const goToCollector = (userId) => {
-      router.push(`/A1_testAPI/collect/${userId}`)
+      router.push(`/collectorHome/${userId}`)
   }
   const goToAdmin = (userId) => {
       router.push(`/A1_testAPI/admin/${userId}`)
