@@ -21,57 +21,56 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+  import { ref, onMounted } from 'vue'
+  import { useRoute, useRouter } from 'vue-router'
 
-const runtimeConfig = useRuntimeConfig()
-let BASE_URL = runtimeConfig.public.BASE_URL
+  const runtimeConfig = useRuntimeConfig()
+  let BASE_URL = runtimeConfig.public.BASE_URL
 
-const route = useRoute()
-const users = await $fetch(BASE_URL + `/users/${route.params.id}`, {
-  method: 'GET',
-})
-let username = ref(users.username)
-let userId = ref(users.id)
-let phonenumber = ref(users.phone_no)
-let role = ref(users.role)
+  const route = useRoute()
+  const users = await $fetch(BASE_URL + `/users/${route.params.id}`, {
+    method: 'GET',
+  })
+  let username = ref(users.username)
+  let userId = ref(users.id)
+  let phonenumber = ref(users.phone_no)
+  let role = ref(users.role)
 
-const router = useRouter()
-const goToAllHome = () => {
-  router.push(`/Houselist`)
-}
-const goToAllBill = () => {
-  router.push(`/A1_testAPI/allBill`)
-}
+  const router = useRouter()
+  const goToAllHome = () => {
+    router.push(`/Houselist`)
+  }
+  const goToAllBill = () => {
+    router.push(`/A1_testAPI/allBill`)
+  }
 
-const bills = await $fetch(BASE_URL + `/bills`, {
-  method: 'GET',
-})
+  const bills = await $fetch(BASE_URL + `/bills`, {
+    method: 'GET',
+  })
 
-// Sorting bills
-const sortedBills = bills.sort((a, b) => {
-  const dateA = new Date(a.dateTime || '1000-12-31');
-  const dateB = new Date(b.dateTime || '1000-12-31');
-  return dateB - dateA;
-})
+  // Sorting bills
+  const sortedBills = bills.sort((a, b) => {
+    const dateA = new Date(a.dateTime || '1000-12-31');
+    const dateB = new Date(b.dateTime || '1000-12-31');
+    return dateB - dateA;
+  })
 
-onMounted(() => {
-  document.querySelector('.circle-image').src =`assets/images/users/${users.Image_iD}.jpg`; // img user
+  onMounted(() => {
+    document.querySelector('.circle-image').src =`assets/images/users/${users.Image_iD}.jpg`; // img user
 
-  setTimeout(() => {
-    let count = 1;
-    sortedBills.forEach(bill => {
-      if (count < 4 && bill.collector.id === users.id) {
-        const latestBill = document.querySelector(`#bill-item-${count}`);
-        latestBill.textContent = `บิลที่: ${bill.id}   บ้านเลนที่: ${bill.land.id}`;
-        latestBill.style.display = "flex";
-        count++;
-      }
+    setTimeout(() => {
+      let count = 1;
+      sortedBills.forEach(bill => {
+        if (count < 4 && bill.collector.id === users.id) {
+          const latestBill = document.querySelector(`#bill-item-${count}`);
+          latestBill.textContent = `บิลที่: ${bill.id}   บ้านเลนที่: ${bill.land.id}`;
+          latestBill.style.display = "flex";
+          count++;
+        }
+      });
     });
   });
-});
 </script>
-
 
 <style scoped>
 .collector {
