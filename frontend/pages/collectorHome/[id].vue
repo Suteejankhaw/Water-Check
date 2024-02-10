@@ -1,7 +1,7 @@
 <template>
     <div class="page-container">
     <div class="collector">
-      <img alt="Image" class="circle-image">
+      <img alt="Image" class="circle-image" >
       <div class="user-info">
         <p>ID:{{ userId }}</p> 
         <p>Name:{{ username }}</p>
@@ -20,27 +20,21 @@
     </div>
   </template>
   
-<script setup lang="ts">
-  import { ref, computed } from 'vue'
+  <script setup lang="ts">
+  import { ref, onMounted } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
 
-  
   const runtimeConfig = useRuntimeConfig()
   let BASE_URL = runtimeConfig.public.BASE_URL
-
 
   const route = useRoute()
   const users = await $fetch(BASE_URL + `/users/${route.params.id}`, {
     method: 'GET',
   })
-  setTimeout(() => {
-    document.querySelector('.circle-image').src = `C:/Users/PC/Documents/GitHub/Water-Check/frontend/assets/images/users/${users.Image_iD}.jpg`
-  });
   let username = ref(users.username)
   let userId = ref(users.id)
   let phonenumber = ref(users.phone_no)
   let role = ref(users.role)
-
 
   const router = useRouter()
   const goToAllHome = () => {
@@ -51,27 +45,33 @@
   }
 
   const bills = await $fetch(BASE_URL + `/bills`, {
-      method: 'GET',
-    })
-    //เรียงล่าสุดไปเก่าสุด (Null = 1000-12-31)
-    const sortedBills = bills.sort((a, b) => {
-      const dateA = new Date(a.dateTime || '1000-12-31');
-      const dateB = new Date(b.dateTime || '1000-12-31');
-      return dateB - dateA;
-    });
+    method: 'GET',
+  })
+
+  // Sorting bills
+  const sortedBills = bills.sort((a, b) => {
+    const dateA = new Date(a.dateTime || '1000-12-31');
+    const dateB = new Date(b.dateTime || '1000-12-31');
+    return dateB - dateA;
+  })
+
+  onMounted(() => {
+    document.querySelector('.circle-image').src =`assets/images/users/${users.Image_iD}.jpg`; // img user
+
     setTimeout(() => {
       let count = 1;
       sortedBills.forEach(bill => {
         if (count < 4 && bill.collector.id === users.id) {
-            const latestBill = document.querySelector(`#bill-item-${count}`);
-            latestBill.textContent = `บิลที่: ${bill.id}   บ้านเลนที่: ${bill.land.id}`;
-            latestBill.style.display = "flex";
-
-            count++;
+          const latestBill = document.querySelector(`#bill-item-${count}`);
+          latestBill.textContent = `บิลที่: ${bill.id}   บ้านเลนที่: ${bill.land.id}`;
+          latestBill.style.display = "flex";
+          count++;
         }
       });
     });
+  });
 </script>
+
   
   <style scoped>
 .collector {
