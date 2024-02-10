@@ -10,6 +10,9 @@ export class LandEntity {
     @Column({nullable : false})
     meter_no: string;
 
+    @Column({ nullable: true }) // Add this line to define the address column
+    address: string; // Add this line to define the address column
+
     @OneToMany(() => BillEntity, (bill) => bill.land)
     bill: BillEntity[]
 

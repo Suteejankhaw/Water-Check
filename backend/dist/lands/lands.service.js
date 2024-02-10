@@ -12,35 +12,57 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LandService = void 0;
+exports.LandsService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const land_entity_1 = require("./land.entity/land.entity");
-let LandService = class LandService {
+let LandsService = class LandsService {
     constructor(landRepository) {
         this.landRepository = landRepository;
     }
-    async findOne(id) {
-        try {
-            const land = await this.landRepository.findOne({
-                where: { id },
-                relations: ['user'],
-            });
-            if (!land) {
-                throw new common_1.NotFoundException(`Land not found with ID ${id}`);
-            }
-            return land;
+    async findAll() {
+        return this.landRepository.find({});
+    }
+    async findById(id) {
+        return this.landRepository.findOne({
+            where: { id: id },
+        });
+    }
+    async create(land) {
+        return this.landRepository.save(land);
+    }
+    async update(id, land) {
+        await this.landRepository.update(id, land);
+        return this.landRepository.findOne({ where: { id: id } });
+    }
+    async delete(id) {
+        const billsCount = await this.landRepository.count({
+            where: { id },
+        });
+        if (billsCount > 0) {
+            console.error(`Pls delete all Bill in land ID ${id}.`);
+            return;
         }
-        catch (error) {
-            throw new common_1.NotFoundException(`Land not found with ID ${id}`);
-        }
+        await this.landRepository.delete(id);
+        console.log(`success delete Land ID ${id}.`);
+    }
+    async createMultipleLands(landsData) {
+        const lands = landsData.map((data) => this.landRepository.create(data));
+        return this.landRepository.save(lands);
+    }
+    async findOneByIdWithUserAndBills(id) {
+        return this.landRepository.createQueryBuilder('land')
+            .leftJoinAndSelect('land.user', 'user')
+            .leftJoinAndSelect('land.bill', 'bill')
+            .where('land.id = :id', { id })
+            .getOne();
     }
 };
-exports.LandService = LandService;
-exports.LandService = LandService = __decorate([
+exports.LandsService = LandsService;
+exports.LandsService = LandsService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(land_entity_1.LandEntity)),
     __metadata("design:paramtypes", [typeorm_2.Repository])
-], LandService);
+], LandsService);
 //# sourceMappingURL=lands.service.js.map

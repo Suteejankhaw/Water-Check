@@ -4,7 +4,7 @@ import { SeederService } from './seeder/seeder.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
+  app.enableCors();
   // For creating of the test data
   const seeder = app.get(SeederService);
   await seeder.seed();

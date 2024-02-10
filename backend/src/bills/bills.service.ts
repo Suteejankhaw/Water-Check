@@ -1,40 +1,44 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { BillEntity } from './bill.entity/bill.entity';
 
 @Injectable()
 export class BillsService {
-  private bills: Bill[] = [];
+  constructor(
+    @InjectRepository(BillEntity)
+    private readonly billRepository: Repository<BillEntity>,
+  ) {}
 
-  createBill(billData: Bill): void {
-    this.bills.push(billData);
+  async findAll(): Promise<BillEntity[]> {
+    return this.billRepository.find({
+      relations: ['land', 'collector'],
+    });
   }
 
-  getAllBills(): Bill[] {
-    return this.bills;
+  async findById(id: number): Promise<BillEntity> {
+    return this.billRepository.findOne({
+      where: {id: id},
+      relations: ['land', 'collector'],
+    });
+ }
+
+ async create(bill: BillEntity): Promise<BillEntity> {
+    return this.billRepository.save(bill);
+ }
+
+ async update(id: number, bill: BillEntity): Promise<BillEntity> {
+    await this.billRepository.update(id, bill);
+    return this.billRepository.findOne({where: {id: id}});
+ }
+
+ async delete(id: number): Promise<void> {
+  await this.billRepository.delete(id);
+ }
+
+ 
+ async createMultipleBills(billsData: Partial<BillEntity>[]): Promise<BillEntity[]> {
+  const bills = billsData.map((data) => this.billRepository.create(data));
+  return this.billRepository.save(bills);
   }
-
-  getBillById(billId: string): Bill | undefined {
-    return this.bills.find((bill) => bill.id === billId);
-  }
-
-  updateBill(billId: string, updatedData: Partial<Bill>): Bill | undefined {
-    const billIndex = this.bills.findIndex((bill) => bill.id === billId);
-
-    if (billIndex !== -1) {
-      this.bills[billIndex] = { ...this.bills[billIndex], ...updatedData };
-      return this.bills[billIndex];
-    }
-
-    return undefined;
-  }
-
-  deleteBill(billId: string): void {
-    this.bills = this.bills.filter((bill) => bill.id !== billId);
-  }
-}
-
-export interface Bill {
-  id: string;
-  amount: number;
-  description: string;
-  // Add more properties as needed
 }

@@ -1,42 +1,38 @@
-import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, NotFoundException } from '@nestjs/common';
 import { BillsService } from './bills.service';
-import { Bill } from './bills.service';
+import { BillEntity } from './bill.entity/bill.entity';
 
 @Controller('bills')
 export class BillsController {
   constructor(private readonly billsService: BillsService) {}
 
   @Get()
-  getAllBills(): Bill[] {
-    return this.billsService.getAllBills();
+  async findAll(): Promise<BillEntity[]> {
+     return this.billsService.findAll();
   }
-
+ 
   @Get(':id')
-  getBillById(@Param('id') id: string): Bill | undefined {
-    return this.billsService.getBillById(id);
+  async findById(@Param('id') id: number): Promise<BillEntity> {
+     const bill = await this.billsService.findById(id);
+     if (!bill) {
+       throw new NotFoundException(`Bill with ID ${id} not found.`);
+     }
+     return bill;
   }
-
+ 
   @Post()
-  createBill(@Body() billData: any) {
-    this.billsService.createBill(billData);
-    return 'Bill created successfully';
+  async create(@Body() bill: BillEntity): Promise<BillEntity> {
+     return this.billsService.create(bill);
   }
-
+ 
   @Put(':id')
-  updateBill(@Param('id') id: string, @Body() updatedData: any) {
-    const updatedBill = this.billsService.updateBill(id, updatedData);
-
-    if (updatedBill) {
-      return 'Bill updated successfully';
-    } else {
-      return 'Bill not found';
-    }
+  async update(@Param('id') id: number, @Body() bill: BillEntity): Promise<BillEntity> {
+     return this.billsService.update(id, bill);
   }
-
+ 
   @Delete(':id')
-  deleteBill(@Param('id') id: string) {
-    this.billsService.deleteBill(id);
-    return 'Bill deleted successfully';
+  async delete(@Param('id') id: number): Promise<void> {
+     await this.billsService.delete(id);
   }
+ 
 }
-

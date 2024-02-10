@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity/user.entity';
@@ -35,4 +35,14 @@ export class UserService {
   const users = usersData.map((data) => this.userRepository.create(data));
   return this.userRepository.save(users);
 }
+
+async findUserWithLandsAndBills(userId: number): Promise<UserEntity> {
+   return this.userRepository
+     .createQueryBuilder('user')
+     .leftJoinAndSelect('user.lands', 'land')
+     .leftJoinAndSelect('land.bill', 'bill')
+     .where('user.id = :userId', { userId })
+     .getOne();
+ }
+
 }

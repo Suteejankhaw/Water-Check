@@ -3,6 +3,7 @@ import { LandEntity } from "src/lands/land.entity/land.entity";
 export declare class UserEntity {
     id: number;
     username: string;
+    fullname: string;
     password: string;
     phone_no: string;
     role: string;

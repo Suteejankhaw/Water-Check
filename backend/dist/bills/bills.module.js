@@ -12,12 +12,13 @@ const bills_service_1 = require("./bills.service");
 const bills_controller_1 = require("./bills.controller");
 const typeorm_1 = require("@nestjs/typeorm");
 const bill_entity_1 = require("./bill.entity/bill.entity");
+const land_entity_1 = require("../lands/land.entity/land.entity");
 let BillsModule = class BillsModule {
 };
 exports.BillsModule = BillsModule;
 exports.BillsModule = BillsModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([bill_entity_1.BillEntity])],
+        imports: [typeorm_1.TypeOrmModule.forFeature([bill_entity_1.BillEntity]), typeorm_1.TypeOrmModule.forFeature([land_entity_1.LandEntity])],
         exports: [typeorm_1.TypeOrmModule],
         providers: [bills_service_1.BillsService],
         controllers: [bills_controller_1.BillsController]

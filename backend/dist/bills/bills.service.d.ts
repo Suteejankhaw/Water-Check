@@ -1,13 +1,12 @@
+import { Repository } from 'typeorm';
+import { BillEntity } from './bill.entity/bill.entity';
 export declare class BillsService {
-    private bills;
-    createBill(billData: Bill): void;
-    getAllBills(): Bill[];
-    getBillById(billId: string): Bill | undefined;
-    updateBill(billId: string, updatedData: Partial<Bill>): Bill | undefined;
-    deleteBill(billId: string): void;
-}
-export interface Bill {
-    id: string;
-    amount: number;
-    description: string;
+    private readonly billRepository;
+    constructor(billRepository: Repository<BillEntity>);
+    findAll(): Promise<BillEntity[]>;
+    findById(id: number): Promise<BillEntity>;
+    create(bill: BillEntity): Promise<BillEntity>;
+    update(id: number, bill: BillEntity): Promise<BillEntity>;
+    delete(id: number): Promise<void>;
+    createMultipleBills(billsData: Partial<BillEntity>[]): Promise<BillEntity[]>;
 }

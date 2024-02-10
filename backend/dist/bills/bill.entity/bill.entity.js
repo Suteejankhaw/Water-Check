@@ -22,11 +22,11 @@ __decorate([
 ], BillEntity.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
+    __metadata("design:type", Number)
 ], BillEntity.prototype, "cost_value", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
+    __metadata("design:type", Number)
 ], BillEntity.prototype, "unit_value", void 0);
 __decorate([
     (0, typeorm_1.Column)(),

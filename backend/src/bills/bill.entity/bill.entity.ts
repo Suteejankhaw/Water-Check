@@ -8,10 +8,10 @@ export class BillEntity {
     id: number;
 
     @Column()
-    cost_value: string;
+    cost_value: number;
 
     @Column()
-    unit_value: string;
+    unit_value: number;
 
     @Column()
     month: string;

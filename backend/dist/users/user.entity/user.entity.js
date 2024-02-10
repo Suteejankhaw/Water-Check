@@ -25,6 +25,10 @@ __decorate([
     __metadata("design:type", String)
 ], UserEntity.prototype, "username", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ unique: false }),
+    __metadata("design:type", String)
+], UserEntity.prototype, "fullname", void 0);
+__decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], UserEntity.prototype, "password", void 0);

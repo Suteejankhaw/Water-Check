@@ -1,57 +1,126 @@
 <template>
-  <div class="flex justify-center items-center h-screen bg-slate-200">
-    <div class="flex flex-col h-full w-1/2 my-10 px-8 bg-white">
-      <img src="assets\images\1.jpg" alt="Image" class="w-full h-52 object-cover mx-auto mb-4">
+  <div class="min-h-screen bg-slate-200 flex items-center justify-center">
+    <div class="bg-white shadow-md rounded-lg max-w-xl w-full p-8">
+      <img src="assets\images\1.jpg" alt="Image" class="rounded-lg w-full h-52 object-cover mx-auto mb-4">
 
-      <div class="flex flex-col space-y-2">
-        <h1 class="text-2xl text-gray-700 mb-4">Bill in <span class="font-bold">{{ month }}</span> </h1>
-        <p class="text-lg text-gray-700">หมายเลขบิล: <span class="font-bold">{{ billId }}</span></p>
-        <p class="text-lg text-gray-700">บ้านเลขที่: <span class="font-bold">{{ landId }}</span></p>
-        <p class="text-lg text-gray-700">เจ้าของบ้าน: <span class="font-bold">{{ fullname }}</span></p>
-        <p class="text-lg text-gray-700">ค่าน้ำจำนวน: <span class="font-bold">{{ cost }}</span></p>
-        <p class="text-lg text-gray-700">ชำระวันที่: <span class="font-bold">{{ paidDate }}</span></p>
-        <p class="text-lg text-gray-700">ผู้จ่ายบิล: <span class="font-bold">{{ collectorName }}</span></p>
+      <div class="space-y-4">
+        <h1 class="text-2xl font-semibold text-gray-700">Belong to <span class="font-bold">{{ month }}</span></h1>
+        <dl class="grid grid-cols-2 gap-4 text-lg text-gray-700">
+          <dt><span class="font-bold">Bill Number:</span></dt>
+          <dd>{{ billId }}</dd>
+          <dt><span class="font-bold">Bill Collector:</span></dt>
+          <dd>{{ collectorFullname }}</dd>
+          <dt><span class="font-bold">House Address:</span></dt>
+          <dd>{{ landAddress }}</dd>
+          <dt><span class="font-bold">Homeowner:</span></dt>
+          <dd>{{ userFullname }}</dd>
+          <dt><span class="font-bold">Usage Amount:</span></dt>
+          <dd>{{ costValue }}</dd>
+          <dt><span class="font-bold">Total Payment:</span></dt>
+          <dd>{{ totalCost }} Baht</dd>
+          <dt><span class="font-bold">Payment Date:</span></dt>
+          <dd>{{ dateTime }}</dd>
+        </dl>
       </div>
 
-      <PrettyBtn content="ย้อนกลับ" @click="goBack"/>
+      <PrettyBtn content="Go Back" @click="goBack" :isFullWidth="true" class="mt-4"/>
     </div>
   </div>
 </template>
  
-
 <script lang="ts">
-import { ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 export default {
   setup() {
     const route = useRoute()
-    const billId = ref(route.params.id)
+    const router = useRouter()
 
-    // stored data from fetch database
-    const fullname = "นายอมลำแก้ว พรองใหญ่"
-    const landId = "127"
-    const unit = 20
-    const cost = unit * 7
-    const paidDate = "3/Jan/2024"
-    const collectorName = "นายเจ้าชายจูลี่ อัลเบริต"
-    const month = "January"
+    const id =  ref(route.params.id)
+
+    const billId = ref(null)
+    const fullname = ref('?')
+    const landId = ref('')
+    const landAddress = ref('?')
+    const userId = ref('')
+    const unitValue = ref(0)
+    const costValue = ref(0)
+    const dateTime = ref('')
+    const collectorUsername = ref('')
+    const collectorFullname = ref('')
+    const month = ref('')
+    const totalCost = computed(() => unitValue.value * costValue.value)
+    const userFullname = ref('')
+
+    onMounted(async () => {
+      try {
+        // Fetch bill data
+        const billApiPath = `http://localhost:5000/bills/${id.value}`
+        const billResponse = await fetch(billApiPath)
+        if (!billResponse.ok) {
+          throw new Error(`HTTP error! status: ${billResponse.status}`)
+        }
+        const billData = await billResponse.json()
+
+        billId.value = billData.id
+        fullname.value = billData.collector.fullname
+        landId.value = billData.land.id
+        landAddress.value = billData.land.address
+        unitValue.value = billData.unit_value
+        costValue.value = billData.cost_value
+        dateTime.value = new Date(billData.dateTime).toLocaleString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false, // Use  24-hour clock
+        })
+        collectorUsername.value = billData.collector.username
+        collectorFullname.value = billData.collector.fullname
+        month.value = billData.month
+
+        // Fetch land data to get the user's fullname
+        const userApiPath = `http://localhost:5000/users/${landId.value}`
+        const userResponse = await fetch(userApiPath)
+        if (!userResponse.ok) {
+          throw new Error(`HTTP error! status: ${userResponse.status}`)
+        }
+        const userData = await userResponse.json()
+
+        userFullname.value = userData.fullname // Store the user's fullname
+        userId.value = userData.id
+      } catch (error) {
+        console.error('There has been a problem with your fetch operation:', error)
+      }
+    })
+
+
+    const goBack = () => {
+      router.push(`/userBills/${userId.value}`)
+    }
 
     return {
       billId,
       fullname,
-      landId,
-      cost,
-      paidDate,
-      collectorName,
+      landAddress,
+      unitValue,
+      costValue,
+      dateTime,
+      collectorUsername,
+      collectorFullname,
       month,
+      totalCost,
+      userFullname,
+      goBack,
     }
   },
-  methods: {
-    goBack() {
-      this.$router.go(-1)
-    },
-  }
+
 }
 </script>
+
+
+
  

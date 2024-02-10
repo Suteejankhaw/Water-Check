@@ -1,10 +1,10 @@
-import { Body, Delete, Controller, Get, NotFoundException, Param, ParseIntPipe, Post, Put, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Body, Delete, Controller, Get, NotFoundException, Param, Post, Put, } from '@nestjs/common';
 import { UserService } from './users.service';
 import { UserEntity } from './user.entity/user.entity';
-import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('users')
 export class UsersController {
+ userRepository: any;
  constructor(private readonly userService: UserService) {}
 
  @Get()
@@ -36,4 +36,9 @@ export class UsersController {
     await this.userService.delete(id);
  }
 
+ @Get(':id/lands-and-bills')
+ async getUserWithLandsAndBills(@Param('id') userId: number): Promise<UserEntity> {
+   return this.userService.findUserWithLandsAndBills(userId);
+ }
+ 
 }
