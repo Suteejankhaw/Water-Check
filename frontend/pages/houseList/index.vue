@@ -10,7 +10,7 @@
           <div class="overlay">{{ house.id }}</div>
           <div class="image-container">
             <img :src="house.image" alt="Image">
-            <button class="bill-button" @click="">บันทึกบิล</button>
+            <button class="bill-button" @click="gotoCheckBill(house.id)">บันทึกบิล</button>
           </div>
         </div>
         <div v-if="filteredHouses.length === 0" class="no-results">ไม่พบข้อมูลบ้านเลขที่</div>
@@ -21,6 +21,9 @@
 </template>
 
 <script>
+const runtimeConfig = useRuntimeConfig()
+let BASE_URL = runtimeConfig.public.BASE_URL
+
 export default {
   data() {
     return {
@@ -36,8 +39,6 @@ export default {
   },
   methods: {
     async data() {
-      const runtimeConfig = useRuntimeConfig()
-      let BASE_URL = runtimeConfig.public.BASE_URL
       const lands = await $fetch(BASE_URL + '/lands', {
         method: 'GET',
       });
@@ -46,6 +47,9 @@ export default {
         image: `public/houses/house${land.id}.jpg`,
       }));
       this.loading = false;
+    },
+    gotoCheckBill(houseId) {
+      this.$router.push(`/checkbill/${houseId}`);
     },
   },
   mounted() {

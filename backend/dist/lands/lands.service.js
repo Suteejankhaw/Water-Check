@@ -22,11 +22,14 @@ let LandsService = class LandsService {
         this.landRepository = landRepository;
     }
     async findAll() {
-        return this.landRepository.find({});
+        return this.landRepository.find({
+            relations: ['user', 'bill'],
+        });
     }
     async findById(id) {
         return this.landRepository.findOne({
             where: { id: id },
+            relations: ['user', 'bill'],
         });
     }
     async create(land) {

@@ -13,12 +13,14 @@ export class LandsService {
 
   async findAll(): Promise<LandEntity[]> {
     return this.landRepository.find({
+      relations: ['user', 'bill'],
     });
   }
 
   async findById(id: number): Promise<LandEntity> {
     return this.landRepository.findOne({
       where: {id: id},
+      relations: ['user', 'bill'],
     });
  }
 
