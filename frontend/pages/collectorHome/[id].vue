@@ -43,6 +43,9 @@
   const goToAllBill = () => {
     router.push(`/A1_testAPI/allBill`)
   }
+  const goToSingleBill = (billId) => {
+    router.push(`/singleBillCollector/${billId}?Me=${users.id}`)
+  }
 
   const bills = await $fetch(BASE_URL + `/bills`, {
     method: 'GET',
@@ -56,7 +59,7 @@
   })
 
   onMounted(() => {
-    document.querySelector('.circle-image').src =`assets/images/users/${users.Image_iD}.jpg`; // img user
+    document.querySelector('.circle-image').src =`/users/user${users.id}.jpg`; // img user
 
     setTimeout(() => {
       let count = 1;
@@ -65,6 +68,9 @@
           const latestBill = document.querySelector(`#bill-item-${count}`);
           latestBill.textContent = `บิลที่: ${bill.id}   บ้านเลนที่: ${bill.land.id}`;
           latestBill.style.display = "flex";
+          latestBill.addEventListener('click', () => {
+            goToSingleBill(bill.id)
+          });
           count++;
         }
       });

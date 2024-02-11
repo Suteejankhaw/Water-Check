@@ -6,8 +6,9 @@
     </div>
     <div class="box-container" v-if="!loading">
       <div class="box-container">
-        <div class="box" v-for="house in filteredHouses" :key="house.id">
-          <div class="overlay">{{ house.id }}</div>
+        <div class="box" v-for="house in filteredHouses" :key="house.housesId">
+          <div class="overlay">{{ house.housesId }}</div>
+          <div class="overlay">{{ house.billStatus }}</div>
           <div class="image-container">
             <img :src="house.image" alt="Image">
             <button class="bill-button" @click="gotoCheckBill(house.id)">บันทึกบิล</button>
@@ -20,43 +21,68 @@
   </div>
 </template>
 
-<script>
-const runtimeConfig = useRuntimeConfig()
-let BASE_URL = runtimeConfig.public.BASE_URL
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router'
 
-export default {
-  data() {
-    return {
-      searchQuery: '', // เพิ่มตัวแปร searchQuery ใน data และกำหนดค่าเริ่มต้นเป็นข้อความว่าง
-      houses: [],
-      loading: true
-    }
-  },
-  computed: {
-    filteredHouses() {
-      return this.houses.filter(house => house.id.toLowerCase().includes(this.searchQuery.toLowerCase()));
-    }
-  },
-  methods: {
-    async data() {
-      const lands = await $fetch(BASE_URL + '/lands', {
-        method: 'GET',
-      });
-      this.houses = lands.map(land => ({
-        id: `บ้านเลขที่ ${land.id}`,
-        image: `public/houses/house${land.id}.jpg`,
-      }));
-      this.loading = false;
-    },
-    gotoCheckBill(houseId) {
-      this.$router.push(`/checkbill/${houseId}`);
-    },
-  },
-  mounted() {
-    this.data();
-  },
+const runtimeConfig = useRuntimeConfig();
+const BASE_URL = runtimeConfig.public.BASE_URL;
+
+const searchQuery = ref('');
+const houses = ref([]);
+const loading = ref(true);
+
+const filteredHouses = computed(() => {
+  return houses.value.filter(house => house.id.toLowerCase().includes(searchQuery.value.toLowerCase()));
+});
+
+function getCurrentMonth() {
+  const currentDate = new Date();
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+  return monthNames[currentDate.getMonth()];
 }
+
+const fetchData = async () => {
+  try {
+    const lands = await $fetch(BASE_URL + '/lands', {
+      method: 'GET',
+    });
+    houses.value = lands.map(land => {
+      const sortedBills = land.bill.sort((a, b) => {
+        const dateA = new Date(`${a.month} 1, 2022`);
+        const dateB = new Date(`${b.month} 1, 2022`);
+        return dateB - dateA;
+      });
+      const latestBill = sortedBills[0];
+
+      const billStatus = latestBill.month === getCurrentMonth() ? 'เสร็จสิ้น' : 'ค้างชำระ';
+
+      return {
+        id: land.id,
+        housesId: `บ้านเลขที่ ${land.id}`,
+        image: `/houses/house${land.id}.jpg`,
+        bills: sortedBills,
+        billStatus: billStatus,
+      };
+    });
+    loading.value = false;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+const router = useRouter()
+const gotoCheckBill = (houseId) => {
+  router.push(`/checkbill/${houseId}`);
+};
+
+onMounted(() => {
+  fetchData();
+});
 </script>
+
 
 <style scoped>
 .container {
