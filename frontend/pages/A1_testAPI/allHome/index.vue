@@ -1,37 +1,29 @@
 <template>
-    <div>
-        <p>Homes</p>
-        <div class="allHome"></div>
-    </div>
+  <div>
+    <header>HOUSELIST</header>
+    <button @click="data()">---------</button>
+  </div>
 </template>
 
-<script setup lang="ts">
-    import { ref, computed } from 'vue'
-    import { useRoute, useRouter } from 'vue-router'
-
-    
-    const runtimeConfig = useRuntimeConfig()
-    let BASE_URL = runtimeConfig.public.BASE_URL
-
-
-    const lands = await $fetch(BASE_URL + `/lands`, {
-      method: 'GET',
-    })
-    setTimeout(() => {
-      const allHomeContainer = document.querySelector('.allHome')
-      lands.forEach(land => {
-        const home = document.createElement('p')
-        home.textContent = `HomeID: ${land.id}`
-        allHomeContainer.appendChild(home)
-
-        const saveBill = document.createElement('button')
-        saveBill.textContent = `saveBill`
-        saveBill.addEventListener('click', SaveBillButton(land.id));
-        allHomeContainer.appendChild(saveBill)
-      });
-
-      function  SaveBillButton() {
-        
-      }
-    });
+<script>
+  export default {
+    data() {
+      return {
+        houses: [],
+      };
+    },
+    computed: {
+    },
+    methods: {
+      async data() {
+        const lands = await $fetch('http://localhost:5000/lands', {
+          method: 'GET',
+        })
+        this.houses = lands.map(land => ({
+          id: `บ้านเลขที่ ${land.id}`,
+          image: `assets/images/lands/${land.Image_iD}.jpg`,
+        }));
+      },
+    },
+  }
 </script>
