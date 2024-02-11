@@ -29,13 +29,13 @@ __decorate([
     __metadata("design:type", String)
 ], UserEntity.prototype, "password", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ unique: false }),
     __metadata("design:type", String)
-], UserEntity.prototype, "phone_no", void 0);
+], UserEntity.prototype, "fullname", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], UserEntity.prototype, "Image_iD", void 0);
+], UserEntity.prototype, "phone_no", void 0);
 __decorate([
     (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)

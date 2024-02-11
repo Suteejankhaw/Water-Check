@@ -4,8 +4,8 @@ export declare class UserEntity {
     id: number;
     username: string;
     password: string;
+    fullname: string;
     phone_no: string;
-    Image_iD: string;
     role: string;
     lands: LandEntity[];
 }

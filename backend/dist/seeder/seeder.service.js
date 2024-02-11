@@ -28,56 +28,110 @@ let SeederService = class SeederService {
         this.billsRepository = billsRepository;
     }
     async seed() {
+        const conUnit = 7;
+        const realNames = [
+            'John', 'Jane', 'Michael', 'Emily', 'Robert', 'Linda', 'William', 'Patricia', 'James', 'Elizabeth',
+        ];
+        const generateUsername = (index, baseName) => {
+            return `${baseName}${index}`;
+        };
         const users = Array.from({ length: 10 }, (_, i) => ({
-            username: `User${i}`,
+            username: generateUsername(i, realNames[i % realNames.length]),
+            fullname: realNames[i % realNames.length] + ' Doe',
             password: `Password${i}`,
             phone_no: `${1234567890 + i}`,
-            Image_iD: `${i}`,
             role: 'User',
         }));
-        const collectors = Array.from({ length: 6 }, (_, i) => ({
-            username: `Collector${i}`,
+        const collectors = Array.from({ length: 3 }, (_, i) => ({
+            username: generateUsername(i + 10, realNames[(i + 10) % realNames.length]),
+            fullname: realNames[(i + 10) % realNames.length] + ' Smith',
             password: `Password${i}`,
             phone_no: `${1234567890 + i + 10}`,
-            Image_iD: `${i}`,
             role: 'Collector',
         }));
         const admins = Array.from({ length: 2 }, (_, i) => ({
-            username: `Admin${i}`,
+            username: generateUsername(i + 13, realNames[(i + 13) % realNames.length]),
+            fullname: realNames[(i + 13) % realNames.length] + ' Miller',
             password: `Password${i}`,
-            phone_no: `${1234567890 + i + 16}`,
-            Image_iD: `${i}`,
+            phone_no: `${1234567890 + i + 13}`,
             role: 'Admin',
         }));
         const allUsers = [...users, ...collectors, ...admins];
         const savedUsers = await this.usersRepository.save(allUsers);
-        const landsAndBills = Array.from({ length: 20 }, (_, i) => ({
-            meter_no: `Meter${i}`,
-            Image_iD: `${i}`,
-            userId: i + 1,
-            bills: [{
-                    cost_value: `${Math.floor(Math.random() * 100)}`,
-                    unit_value: `${Math.floor(Math.random() * 10)}`,
-                    month: `Month${i}`,
-                    dateTime: new Date(),
-                }],
-        }));
-        for (let i = 0; i < landsAndBills.length; i++) {
+        const totalUsersWithLands = allUsers.length;
+        const landsAndBills = Array.from({ length: totalUsersWithLands }, (_, i) => {
             const land = new land_entity_1.LandEntity();
-            land.meter_no = landsAndBills[i].meter_no;
-            land.Image_iD = landsAndBills[i].Image_iD;
-            land.user = savedUsers[i % savedUsers.length];
-            const bill = new bill_entity_1.BillEntity();
-            bill.cost_value = landsAndBills[i].bills[0].cost_value;
-            bill.unit_value = landsAndBills[i].bills[0].unit_value;
-            bill.month = landsAndBills[i].bills[0].month;
-            bill.dateTime = landsAndBills[i].bills[0].dateTime;
-            bill.land = land;
-            bill.collector = savedUsers[i % savedUsers.length];
+            land.meter_no = `Meter${i}`;
+            land.user = savedUsers[i];
+            land.address = `24/7 somewhere Thailand Zipcode 99999`;
+            const numBills = Math.floor(Math.random() * 6) + 5;
+            const bills = Array.from({ length: numBills }, () => {
+                const date = new Date();
+                date.setMonth(Math.floor(Math.random() * 12));
+                const monthName = date.toLocaleString('default', { month: 'long' });
+                return {
+                    cost_value: Math.floor(Math.random() * 100),
+                    unit_value: conUnit,
+                    month: monthName,
+                    dateTime: date.toISOString(),
+                };
+            });
+            return { land, bills };
+        });
+        for (const { land, bills } of landsAndBills) {
             await this.landsRepository.save(land);
-            await this.billsRepository.save(bill);
+            for (const billData of bills) {
+                const bill = new bill_entity_1.BillEntity();
+                bill.cost_value = billData.cost_value;
+                bill.unit_value = billData.unit_value;
+                bill.month = billData.month;
+                bill.dateTime = new Date(billData.dateTime);
+                bill.land = land;
+                bill.collector = savedUsers[Math.floor(Math.random() * savedUsers.length)];
+                const dateForMonth = new Date(bill.dateTime);
+                dateForMonth.setDate(1);
+                dateForMonth.setFullYear(2020 + Math.floor(Math.random() * 4));
+                bill.month = dateForMonth.toLocaleString('default', { month: 'long', year: 'numeric' });
+                await this.billsRepository.save(bill);
+            }
         }
         console.log('Users, lands, and bills seeded successfully');
+        console.log('Users, lands, and bills seeded successfully');
+        const newUsers = [
+            {
+                username: 'alex',
+                fullname: 'Alex Smith',
+                password: 'AlexPassword',
+                phone_no: '1234567890',
+                role: 'User',
+            },
+            {
+                username: 'alisa',
+                fullname: 'Alisa Johnson',
+                password: 'AlisaPassword',
+                phone_no: '1234567891',
+                role: 'User',
+            },
+        ];
+        const savedNewUsers = await this.usersRepository.save(newUsers);
+        for (const newUser of savedNewUsers) {
+            const land = new land_entity_1.LandEntity();
+            land.meter_no = `Meter${newUser.id}`;
+            land.user = newUser;
+            land.address = `99/1 forest road field 2 Alien Earth 22222`;
+            await this.landsRepository.save(land);
+            for (let j = 0; j < 2; j++) {
+                const bill = new bill_entity_1.BillEntity();
+                bill.cost_value = Math.floor(Math.random() * 100);
+                bill.unit_value = conUnit;
+                bill.month = j === 0 ? 'January2024' : 'February2024';
+                bill.dateTime = new Date(2024, j, 1);
+                bill.land = land;
+                bill.collector = savedUsers[Math.floor(Math.random() * savedUsers.length)];
+                await this.billsRepository.save(bill);
+            }
+        }
+        console.log('Additional users, lands, and bills seeded successfully');
     }
 };
 exports.SeederService = SeederService;

@@ -9,4 +9,5 @@ export declare class UsersService {
     update(id: number, user: UserEntity): Promise<UserEntity>;
     delete(id: number): Promise<void>;
     createMultipleUsers(usersData: Partial<UserEntity>[]): Promise<UserEntity[]>;
+    findUserWithLandsAndBills(userId: number): Promise<UserEntity>;
 }

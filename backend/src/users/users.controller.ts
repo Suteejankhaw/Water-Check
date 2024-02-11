@@ -36,4 +36,9 @@ export class UsersController {
     await this.userService.delete(id);
  }
 
+ @Get(':id/lands-and-bills')
+ async getUserWithLandsAndBills(@Param('id') userId: number): Promise<UserEntity> {
+   return this.userService.findUserWithLandsAndBills(userId);
+ }
+
 }

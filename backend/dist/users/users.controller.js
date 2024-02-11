@@ -39,6 +39,9 @@ let UsersController = class UsersController {
     async delete(id) {
         await this.userService.delete(id);
     }
+    async getUserWithLandsAndBills(userId) {
+        return this.userService.findUserWithLandsAndBills(userId);
+    }
 };
 exports.UsersController = UsersController;
 __decorate([
@@ -76,6 +79,13 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "delete", null);
+__decorate([
+    (0, common_1.Get)(':id/lands-and-bills'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "getUserWithLandsAndBills", null);
 exports.UsersController = UsersController = __decorate([
     (0, common_1.Controller)('users'),
     __metadata("design:paramtypes", [users_service_1.UsersService])

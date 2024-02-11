@@ -39,6 +39,9 @@ let LandsController = class LandsController {
     async delete(id) {
         await this.landService.delete(id);
     }
+    async findOneByIdWithUserAndBills(id) {
+        return this.landService.findOneByIdWithUserAndBills(id);
+    }
 };
 exports.LandsController = LandsController;
 __decorate([
@@ -76,6 +79,13 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], LandsController.prototype, "delete", null);
+__decorate([
+    (0, common_1.Get)('user-bills/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], LandsController.prototype, "findOneByIdWithUserAndBills", null);
 exports.LandsController = LandsController = __decorate([
     (0, common_1.Controller)('lands'),
     __metadata("design:paramtypes", [lands_service_1.LandsService])

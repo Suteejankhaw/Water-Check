@@ -8,4 +8,5 @@ export declare class LandsController {
     create(land: LandEntity): Promise<LandEntity>;
     update(id: number, land: LandEntity): Promise<LandEntity>;
     delete(id: number): Promise<void>;
+    findOneByIdWithUserAndBills(id: number): Promise<any>;
 }

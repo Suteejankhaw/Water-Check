@@ -15,11 +15,11 @@ export class UserEntity {
     @Column()
     password: string;
 
-    @Column()
-    phone_no: string;
+    @Column({ unique: false })
+    fullname: string;
 
     @Column()
-    Image_iD: string;
+    phone_no: string;
 
     @Column({ nullable: true })
     role: string;

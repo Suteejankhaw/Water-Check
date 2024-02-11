@@ -34,4 +34,9 @@ export class LandsController {
  async delete(@Param('id') id: number): Promise<void> {
     await this.landService.delete(id);
  }
+ 
+ @Get('user-bills/:id')
+ async findOneByIdWithUserAndBills(@Param('id') id: number): Promise<any> {
+   return this.landService.findOneByIdWithUserAndBills(id);
+ }
 }

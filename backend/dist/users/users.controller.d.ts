@@ -8,4 +8,5 @@ export declare class UsersController {
     create(user: UserEntity): Promise<UserEntity>;
     update(id: number, user: UserEntity): Promise<UserEntity>;
     delete(id: number): Promise<void>;
+    getUserWithLandsAndBills(userId: number): Promise<UserEntity>;
 }

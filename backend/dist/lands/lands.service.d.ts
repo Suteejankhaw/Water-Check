@@ -9,4 +9,5 @@ export declare class LandsService {
     update(id: number, land: LandEntity): Promise<LandEntity>;
     delete(id: number): Promise<void>;
     createMultipleLands(landsData: Partial<LandEntity>[]): Promise<LandEntity[]>;
+    findOneByIdWithUserAndBills(id: number): Promise<LandEntity | undefined>;
 }

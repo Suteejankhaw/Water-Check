@@ -51,6 +51,13 @@ let LandsService = class LandsService {
         const lands = landsData.map((data) => this.landRepository.create(data));
         return this.landRepository.save(lands);
     }
+    async findOneByIdWithUserAndBills(id) {
+        return this.landRepository.createQueryBuilder('land')
+            .leftJoinAndSelect('land.user', 'user')
+            .leftJoinAndSelect('land.bill', 'bill')
+            .where('land.id = :id', { id })
+            .getOne();
+    }
 };
 exports.LandsService = LandsService;
 exports.LandsService = LandsService = __decorate([

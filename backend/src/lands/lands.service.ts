@@ -48,4 +48,12 @@ export class LandsService {
   const lands = landsData.map((data) => this.landRepository.create(data));
   return this.landRepository.save(lands);
   }
+
+  async findOneByIdWithUserAndBills(id: number): Promise<LandEntity | undefined> {
+    return this.landRepository.createQueryBuilder('land')
+      .leftJoinAndSelect('land.user', 'user')
+      .leftJoinAndSelect('land.bill', 'bill')
+      .where('land.id = :id', { id })
+      .getOne();
+  }
 }

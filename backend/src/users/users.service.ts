@@ -35,4 +35,13 @@ export class UsersService {
   const users = usersData.map((data) => this.userRepository.create(data));
   return this.userRepository.save(users);
 }
+
+async findUserWithLandsAndBills(userId: number): Promise<UserEntity> {
+   return this.userRepository
+     .createQueryBuilder('user')
+     .leftJoinAndSelect('user.lands', 'land')
+     .leftJoinAndSelect('land.bill', 'bill')
+     .where('user.id = :userId', { userId })
+     .getOne();
+ }
 }
