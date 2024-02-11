@@ -3,7 +3,6 @@
     <header>HOUSELIST</header>
     <div class="search-container">
       <input type="text" placeholder="Search..." v-model="searchQuery">
-      <button @click="data()">Search</button>
     </div>
     <div class="box-container" v-if="!loading">
       <div class="box-container">
@@ -44,7 +43,7 @@ export default {
       });
       this.houses = lands.map(land => ({
         id: `บ้านเลขที่ ${land.id}`,
-        image: `frontend/public/houses/house${land.id}.jpg`,
+        image: `public/houses/house${land.id}.jpg`,
       }));
       this.loading = false;
     },
