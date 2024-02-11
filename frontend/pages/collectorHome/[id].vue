@@ -38,10 +38,10 @@
 
   const router = useRouter()
   const goToAllHome = () => {
-    router.push(`/Houselist`)
+    router.push(`/Houselist/?Me=${users.id}`)
   }
   const goToAllBill = () => {
-    router.push(`/A1_testAPI/allBill`)
+    router.push(`/allbills/?Me=${users.id}`)
   }
   const goToSingleBill = (billId) => {
     router.push(`/singleBillCollector/${billId}?Me=${users.id}`)
