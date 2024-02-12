@@ -70,7 +70,7 @@
         return dateB - dateA;
       });
       const latestBill = sortedBills[0];
-      const billStatus = latestBill.month === getCurrentMonth() ? 'ชำระเสร็จสิ้น' : 'ค้างชำระ';
+      const billStatus = latestBill.month === getCurrentMonth() + " " + new Date().getFullYear() ? 'ชำระเสร็จสิ้น' : 'ค้างชำระ';
 
       houseNumber.value = lands.id;
       owner.value = lands.user.fullname;

@@ -58,7 +58,7 @@ const fetchData = async () => {
       });
       const latestBill = sortedBills[0];
 
-      const billStatus = latestBill.month === getCurrentMonth() ? 'เสร็จสิ้น' : 'ค้างชำระ';
+      const billStatus = latestBill.month === getCurrentMonth() + " " + new Date().getFullYear() ? 'ชำระเสร็จสิ้น' : 'ค้างชำระ';
 
       return {
         id: land.id,
