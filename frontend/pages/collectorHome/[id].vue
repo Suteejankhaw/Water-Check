@@ -4,7 +4,7 @@
     <img alt="Image" class="circle-image" >
     <div class="user-info">
       <p>ID:{{ userId }}</p> 
-      <p>Name:{{ username }}</p>
+      <p>Name:{{ fullname }}</p>
       <p>Phonenumber:{{ phonenumber }}</p> 
       <p>Role:{{ role }}</p> 
     </div>
@@ -32,6 +32,7 @@
     method: 'GET',
   })
   let username = ref(users.username)
+  let fullname = ref(users.fullname)
   let userId = ref(users.id)
   let phonenumber = ref(users.phone_no)
   let role = ref(users.role)

@@ -53,7 +53,7 @@
       router.push(`/collectorHome/${userId}`)
   }
   const goToAdmin = (userId) => {
-      router.push(`/A1_testAPI/admin/${userId}`)
+      router.push(`/superadmin1/${userId}`)
   }
 
   async function login() {

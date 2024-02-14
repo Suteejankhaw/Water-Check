@@ -1,22 +1,51 @@
-<template lang="">
-  <div> <div class="card" @click="goToProfile('john-doe')"> <img src="" alt="Avatar"
-  style="width:100%"> <div class="container"> <h4><b>John Doe</b></h4> <p>Architect &
-  Engineer</p> </div> </div> <div class="card" @click="goToProfile('jane-smith')"> <img
-  src="" alt="Avatar" style="width:100%"> <div class="container"> <h4><b>Jane
-  Smith</b></h4> <p>Software Developer</p> </div> </div> <div class="card"
-  style="margin-top: 20px;" @click="goToProfile('michael-johnson')"> <img src=""
-  alt="Avatar" style="width:100%"> <div class="container"> <h4><b>Michael Johnson</b></h4>
-  <p>Graphic Designer</p> </div> </div> </div>
+<template lang="html">
+  <div> 
+    <div class="card" @click="goToProfile(officer.userId)" v-for="(officer, index) in officers" :key="index"> 
+      <img :src="officer.image" alt="Avatar" style="width:100%"> 
+      <div class="container"> 
+        <h4><b>{{ officer.userfullname }}</b></h4> 
+      </div>
+    </div> 
+  </div>
 </template>
-<script>
-export default {
-  methods: {
-    goToProfile(username) {
-      this.$router.push(`/profile/${username}`);
-    },
-  },
-};
+
+<script setup>
+  import { ref, onMounted } from 'vue';
+  import { useRouter } from 'vue-router';
+
+  const runtimeConfig = useRuntimeConfig();
+  const BASE_URL = runtimeConfig.public.BASE_URL;
+
+  const officers = ref([]);
+  const router = useRouter();
+
+  const fetchData = async () => {
+    try {
+      const users = await $fetch(BASE_URL + '/users', {
+        method: 'GET',
+      });
+      officers.value = users
+        .filter(user => user.role === "Collector")
+        .map(user => ({
+          userId: user.id,
+          userfullname: user.fullname,
+          image: `/users/user${user.id}.jpg`,
+        }));
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  onMounted(() => {
+    fetchData();
+  });
+
+  const goToProfile = (userId) => {
+    router.push(`/superprofile/${userId}`);
+  };
 </script>
+
+
 <style scoped>
 .card {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
