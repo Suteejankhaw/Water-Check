@@ -9,10 +9,8 @@
         <p>Role:{{ role }}</p> 
       </div>
       <div class="box-superadmin"> 
-        <p class="box1-button" @click="goToAllHome()">รายการการบิลจ่ายค่าน้ำ</p> 
         <p class="box1-button" @click="goToAllSuper()">เจ้าหน้าที่</p> 
         <p class="box2-button" @click="goToAllBill()">บิลทั้งหมด</p> 
-        <p class="box2-button" @click="goToAllBill()">บันทึกบิล</p> 
       </div> 
     </div> 
   </div>

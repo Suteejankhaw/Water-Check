@@ -75,7 +75,9 @@ const fetchData = async () => {
 };
 const router = useRouter()
 const gotoCheckBill = (houseId) => {
-  router.push(`/checkbill/${houseId}`);
+  const urlParams = new URLSearchParams(window.location.search);
+  const meValue = urlParams.get('Me');
+  router.push(`/checkbill/${houseId}?Me=${meValue}`);
 };
 
 onMounted(() => {

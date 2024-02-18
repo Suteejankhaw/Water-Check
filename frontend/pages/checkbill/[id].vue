@@ -18,12 +18,18 @@
 
     <!-- Payment history header -->
     <header class="text-2xl font-bold text-center mb-4">
-      ประวัติการชำระ
+      บันทึกบิล
     </header>
     <div class="space-y-4">
-      <div class="flex justify-between items-center p-4 bg-gray-100 rounded-lg shadow-inner gap-2">
-        <div class="text-center">มกราคม, 2566</div>
-        <PrettyBtn content="Check" @click="" :isFullWidth="false" />
+      <div class="flex flex-col justify-between items-center p-4 bg-gray-100 rounded-lg shadow-inner gap-2">
+        <div v-for="(month, index) in overdueMonths" :key="index" class="text-center">
+          {{ month }}
+          <button @click="checkBill(month)">บันทึกบิล</button>
+          <br>
+        </div>
+        <div v-if="overdueMonths.length === 0" class="text-center">
+          ไม่มีบิลที่ต้องชำระ
+        </div>
       </div>
     </div>
   </div>
@@ -31,11 +37,12 @@
  
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
   const runtimeConfig = useRuntimeConfig();
   const BASE_URL = runtimeConfig.public.BASE_URL;
   const route = useRoute()
+  const router = useRouter()
   const id = ref(parseInt(route.params.id));
 
   const houseNumber = ref('123/45');
@@ -44,6 +51,7 @@ import { useRoute } from 'vue-router'
   const status = ref(''); // Initialize status as an empty string
   const landAddress = ref('');
   const landImage = ref('');
+  const overdueMonths = ref([]);
 
   function getCurrentMonthAndYear() {
     const currentDate = new Date();
@@ -76,6 +84,16 @@ import { useRoute } from 'vue-router'
       status.value = billStatus
       landAddress.value = land.address
       landImage.value =  `/houses/house${land.id}.jpg`
+
+      const allMonthsArray = getAllMonthsFrom2024();
+      overdueMonths.value = getAllMonthsFrom2024();
+      sortedBills.forEach(bill => {
+        allMonthsArray.forEach(month => {
+          if (bill.month === month) {
+            overdueMonths.value = (overdueMonths.value).filter(months => months !== month);
+          }
+        });  
+      });   
       
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -84,6 +102,28 @@ import { useRoute } from 'vue-router'
   onMounted(() => {
     fetchData();
   });
+
+  const checkBill = (month) => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const meValue = urlParams.get('Me');
+    router.push(`/printbill/${houseNumber.value}?Month=${month}&Me=${meValue}`)
+  }
+
+  function getAllMonthsFrom2024() {
+    const currentDate = new Date();
+    const startMonth = new Date(2024, 0, 1); // January 2024 (month is 0-indexed)
+    const endMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0); // Current month's last day
+    const monthsArray = [];
+    let currentMonth = new Date(startMonth);
+    while (currentMonth <= endMonth) {
+      const monthName = currentMonth.toLocaleString('en-US', { month: 'long' });
+      const year = currentMonth.getFullYear();
+      monthsArray.push(`${monthName} ${year}`);
+      currentMonth.setMonth(currentMonth.getMonth() + 1);
+    }
+    return monthsArray;
+  }
+
 
   const navigateToAnotherPage = () => {
     window.location.href = '/savebills'; // Use window.location.href for navigation
@@ -122,6 +162,15 @@ import { useRoute } from 'vue-router'
   border-radius: 5px;
   margin-bottom: 20px;
 }
+.text-center button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+  }
 
 .detail {
   margin-bottom: 10px;

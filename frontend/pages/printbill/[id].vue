@@ -24,13 +24,17 @@
       
       <!-- ช่องป้อนข้อมูลค่าน้ำ -->
       <div class="water-bill">
-        <strong style="font-size: 24px;">ค่าน้ำ:</strong><br>
-        <input type="number" placeholder="กรอกค่าน้ำ" style="width: 100%;" v-model="waterCost">
+        <strong style="font-size: 24px;"></strong><br>
         <br>
         <strong style="font-size: 24px;">หน่วยการใช้น้ำ:</strong><br>
         <input type="number" placeholder="กรอกหน่วยการใช้น้ำ" style="width: 100%;" v-model="waterUsage">
         <br>
         <button @click="saveBill">บันทึกบิล</button>
+      </div>
+      <div class="toast">
+        <strong style="font-size: 24px;">บันทึกบิลสำเร็จ</strong><br>
+        <br>
+        <button @click="closeToast">ยืนยัน</button>
       </div>
     </div>
   </template>
@@ -42,6 +46,7 @@
   const runtimeConfig = useRuntimeConfig();
   const BASE_URL = runtimeConfig.public.BASE_URL;
   const route = useRoute()
+  const router = useRouter()
   const id = ref(parseInt(route.params.id));
 
   const houseNumber = ref('');
@@ -86,14 +91,25 @@
   });
 
 
-  const waterCost = ref('');
   const waterUsage = ref(''); 
+  const waterCost = ref('');
+  const toast = ref({ visible: false, message: '' });
+
+  const calculateWaterCost = (waterUsage) => {
+    if (waterUsage > 500) {
+      return waterCost.value = 4.25 * waterUsage;
+    } else {
+      return waterCost.value = 4 * waterUsage;
+    }
+  };
 
   const saveBill = async () => {
     try {
       // ดึง Me(collectorId) จาก URL ?Me=
       const urlParams = new URLSearchParams(window.location.search);
       const meValue = urlParams.get('Me');
+      const monthValue = urlParams.get('Month');
+      console.log(meValue,' . ',monthValue)
 
       const dateTime = new Date().toISOString();
 
@@ -103,9 +119,9 @@
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          cost_value: waterCost.value,
+          cost_value: calculateWaterCost(waterUsage.value),
           unit_value: waterUsage.value,
-          month: getCurrentMonth() + " " + new Date().getFullYear(),
+          month: monthValue,
           dateTime: dateTime,
           land: {
             id: houseNumber.value, 
@@ -115,6 +131,7 @@
           },
         }),
       });
+      showToast();
       console.log('Server Response:', response);
       if (!response.ok) {
         console.error('Error saving bill:', response.statusText);
@@ -124,9 +141,52 @@
       console.error('Error saving bill:', error);
     }
   };
+
+  const goBack = (houseNumber, meValue) => {
+    router.push(`/checkbill/${houseNumber}?Me=${meValue}`)
+  }
+
+  const showToast = () => {
+    document.querySelector('.toast').style.display = 'block';
+    document.querySelector('.image-container').classList.add('blur');
+    document.querySelector('.text-container').classList.add('blur');
+    document.querySelector('.water-bill').classList.add('blur');
+  };
+
+  const closeToast = () => {
+    document.querySelector('.toast').style.display = 'none';
+    document.querySelector('.image-container').classList.remove('blur');
+    document.querySelector('.text-container').classList.remove('blur');
+    document.querySelector('.water-bill').classList.remove('blur');
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const meValue = urlParams.get('Me');
+
+    goBack(houseNumber.value, meValue)
+  };
 </script>
   
   <style scoped>
+
+  .toast {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #eeeeee;
+    color: green;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 1000;
+    align-items: center;
+    text-align: center;
+    display: none;
+  }
+
+  .blur {
+    filter: blur(4px);
+  }
   .printbill {
     display: flex;
     flex-direction: column;
