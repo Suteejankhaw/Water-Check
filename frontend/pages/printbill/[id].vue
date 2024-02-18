@@ -133,10 +133,6 @@
       });
       showToast();
       console.log('Server Response:', response);
-      if (!response.ok) {
-        console.error('Error saving bill:', response.statusText);
-        return;
-      }
     } catch (error) {
       console.error('Error saving bill:', error);
     }
