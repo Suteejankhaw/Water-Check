@@ -2,7 +2,7 @@
     <div class="printbill">
       <!-- รูปภาพบ้าน -->
       <div class="image-container">
-        <img src="/assets/images/1.jpg" alt="Home">
+        <img :src="landImage" alt="Home">
       </div>
       
       <!-- containers ของกล่องข้อความ -->
@@ -53,6 +53,7 @@
   const owner = ref('');
   const meterNumber = ref('');
   const status = ref('');
+  const landImage = ref('');
 
   function getCurrentMonth() {
     const currentDate = new Date();
@@ -81,6 +82,7 @@
       owner.value = lands.user.fullname;
       meterNumber.value = lands.meter_no;
       status.value = billStatus;
+      landImage.value =  `/houses/house${lands.id}.jpg`
 
     } catch (error) {
       console.error('Error fetching data:', error);
