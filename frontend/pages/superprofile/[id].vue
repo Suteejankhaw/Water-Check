@@ -22,12 +22,13 @@
 
 <script setup>
   import { ref, onMounted } from 'vue';
-  import { useRouter } from 'vue-router';
+  import { useRoute, useRouter } from 'vue-router';
 
   const runtimeConfig = useRuntimeConfig();
+  const route = useRoute()
+  const router = useRouter()
   const BASE_URL = runtimeConfig.public.BASE_URL;
 
-  const route = useRoute()
   const id = ref(parseInt(route.params.id));
 
 
@@ -40,6 +41,10 @@
   let phonenumber = ref(users.phone_no)
   let role = ref(users.role)
 
+
+  const goToSingleBill = (billId) => {
+    router.push(`/singleBillCollector/${billId}?Me=${users.id}`)
+  }
 
   const bills = await $fetch(BASE_URL + `/bills`, {
     method: 'GET',

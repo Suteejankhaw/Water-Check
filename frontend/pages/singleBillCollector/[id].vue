@@ -98,15 +98,17 @@ export default {
 
 
     const goBack = () => {
-      // ดึง URLSearchParams จาก URL
-      const urlParams = new URLSearchParams(window.location.search);
-      // ใช้ get method เพื่อดึงค่าที่ต้องการ
-      const meValue = urlParams.get('Me');
-
-      if (meValue) {
-        router.push(`/collectorHome/${meValue}`);
+      // ตรวจสอบว่าต้องการให้กลับไปครั้งเดียวเท่านั้น
+      if (!hasGoneBack) {
+        // ใช้เมธอด `go` ของ router พร้อมกับค่าลบเพื่อกลับไปที่หน้าก่อนหน้านี้
+        router.go(-1);
+        // ตั้งค่าตัวแปรเพื่อบอกว่าได้ทำการกลับไปแล้ว
+        hasGoneBack = true;
       }
-    }
+    };
+
+    // ตัวแปรเพิ่มเติมเพื่อเก็บสถานะการกลับ
+    let hasGoneBack = false;
 
     return {
       landId,

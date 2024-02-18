@@ -41,18 +41,12 @@
 
 
   const router = useRouter()
-  const goToAllHome = () => {
-    router.push("/all-home"); // กำหนดเส้นทาง URL ของหน้ารายการการบิลจ่ายค่าน้ำ
-      }
   const goToAllSuper = () => {
     router.push("/superofficer"); 
       }
   const goToAllBill = () => {
-    router.push("/all-bill"); // กำหนดเส้นทาง URL ของหน้าบิลทั้งหมด
-      }
-  const goToRecordBill = () => {
-    router.push("/record-bill"); // กำหนดเส้นทาง URL ของหน้าบันทึกบิล
-      }
+    router.push(`/allbills/?Me=${users.id}`)
+  }
 </script>
 
 

@@ -6,7 +6,9 @@
       <div class="box-container-wrapper">
         <div v-for="(data, index) in boxData.slice(startIndex, endIndex)" :key="index" class="box-container">
           <!-- แสดงข้อมูลที่ได้รับจาก API แต่ละกล่อง -->
-          {{ ` ${data.billId} ${data.housesId} ${data.month} ${data.dateTime} ` }}
+          <div @click="goToSingleBill(data.id)">
+            {{ ` ${data.billId} ${data.housesId} ${data.month} ` }}
+          </div>
         </div>
       </div>
       <button @click="toggleShowMore">
@@ -17,9 +19,11 @@
   
 <script setup>
 import { ref } from 'vue';
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const runtimeConfig = useRuntimeConfig();
+const route = useRoute()
+const router = useRouter()
 const BASE_URL = runtimeConfig.public.BASE_URL;
 
 const boxData = ref([]);
@@ -55,6 +59,11 @@ const fetchData = async () => {
     console.error('Error fetching data:', error);
   }
 };
+const goToSingleBill = (billId) => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const meValue = urlParams.get('Me');
+    router.push(`/singleBillCollector/${billId}?Me=${meValue}`)
+  }
 onMounted(() => {
   fetchData();
 });
