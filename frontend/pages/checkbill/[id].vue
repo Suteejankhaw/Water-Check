@@ -74,7 +74,17 @@ import { useRoute, useRouter } from 'vue-router'
         const dateB = new Date(`${b.month}  1,  2022`);
         return dateB - dateA;
       });
-      const billStatus = sortedBills.some(bill => bill.month === currentMonthAndYear)
+
+      const allMonthsArray = getAllMonthsFrom2024();
+      overdueMonths.value = getAllMonthsFrom2024();
+      sortedBills.forEach(bill => {
+        allMonthsArray.forEach(month => {
+          if (bill.month === month) {
+            overdueMonths.value = overdueMonths.value.filter(months => months !== month);
+          }
+        });
+      });
+      const billStatus = overdueMonths.value.length === 0
         ? 'ชำระเสร็จสิ้น'
         : 'ค้างชำระ';
 
@@ -84,16 +94,6 @@ import { useRoute, useRouter } from 'vue-router'
       status.value = billStatus
       landAddress.value = land.address
       landImage.value =  `/houses/house${land.id}.jpg`
-
-      const allMonthsArray = getAllMonthsFrom2024();
-      overdueMonths.value = getAllMonthsFrom2024();
-      sortedBills.forEach(bill => {
-        allMonthsArray.forEach(month => {
-          if (bill.month === month) {
-            overdueMonths.value = (overdueMonths.value).filter(months => months !== month);
-          }
-        });  
-      });   
       
     } catch (error) {
       console.error('Error fetching data:', error);

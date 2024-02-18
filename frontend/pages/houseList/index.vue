@@ -31,6 +31,7 @@ const BASE_URL = runtimeConfig.public.BASE_URL;
 const searchQuery = ref('');
 const houses = ref([]);
 const loading = ref(true);
+const overdueMonths = ref([]);
 
 const filteredHouses = computed(() => {
   return houses.value.filter(house => house.id.toLowerCase().includes(searchQuery.value.toLowerCase()));
@@ -51,20 +52,24 @@ const fetchData = async () => {
       method: 'GET',
     });
     houses.value = lands.map(land => {
-      const sortedBills = land.bill.sort((a, b) => {
-        const dateA = new Date(`${a.month} 1, 2022`);
-        const dateB = new Date(`${b.month} 1, 2022`);
-        return dateB - dateA;
+      const allMonthsArray = getAllMonthsFrom2024();
+      overdueMonths.value = getAllMonthsFrom2024();
+      land.bill.forEach(bill => {
+        allMonthsArray.forEach(month => {
+          if (bill.month === month) {
+            overdueMonths.value = overdueMonths.value.filter(months => months !== month);
+          }
+        });
       });
-      const latestBill = sortedBills[0];
-
-      const billStatus = latestBill.month === getCurrentMonth() + " " + new Date().getFullYear() ? 'ชำระเสร็จสิ้น' : 'ค้างชำระ';
+      const billStatus = overdueMonths.value.length === 0
+        ? 'ชำระเสร็จสิ้น'
+        : 'ค้างชำระ';
 
       return {
         id: land.id,
         housesId: `บ้านเลขที่ ${land.id}`,
         image: `/houses/house${land.id}.jpg`,
-        bills: sortedBills,
+        bills: land.bill,
         billStatus: billStatus,
       };
     });
@@ -79,6 +84,21 @@ const gotoCheckBill = (houseId) => {
   const meValue = urlParams.get('Me');
   router.push(`/checkbill/${houseId}?Me=${meValue}`);
 };
+
+function getAllMonthsFrom2024() {
+    const currentDate = new Date();
+    const startMonth = new Date(2024, 0, 1); // January 2024 (month is 0-indexed)
+    const endMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0); // Current month's last day
+    const monthsArray = [];
+    let currentMonth = new Date(startMonth);
+    while (currentMonth <= endMonth) {
+      const monthName = currentMonth.toLocaleString('en-US', { month: 'long' });
+      const year = currentMonth.getFullYear();
+      monthsArray.push(`${monthName} ${year}`);
+      currentMonth.setMonth(currentMonth.getMonth() + 1);
+    }
+    return monthsArray;
+  }
 
 onMounted(() => {
   fetchData();
