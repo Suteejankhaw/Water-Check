@@ -70,7 +70,7 @@
 }
 .circle-image {
   width: 200px;
-  height: 400px;
+  height: 200px;
   border-radius: 50%;
 }
 
@@ -113,7 +113,7 @@
   justify-content: center;
   align-items: center;
   width: 100px; /* กำหนดความกว้าง */
-  height: 200px; /* กำหนดความสูง */
+  height: 100px; /* กำหนดความสูง */
   box-shadow: #ccc;
 }
 </style>
