@@ -84,7 +84,7 @@
     height: 200px;
     border-radius: 50%;
     display: block;
-    margin: 0 auto; /* Center the image */
+    margin: 0 auto;
   }
 
   .user-info {
@@ -111,8 +111,11 @@
   .bill-list {
     list-style-type: none;
     padding: 0;
+    padding-left: 43.5%;
     margin-top: 20px;
     text-align: center;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .bill-item {
@@ -131,5 +134,5 @@
 
   .bill-item:hover {
     background-color: #0056b3;
-  }
-</style>
+  } 
+  </style>
